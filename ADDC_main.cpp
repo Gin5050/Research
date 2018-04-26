@@ -58,15 +58,7 @@ void Process_node(NODE *n_data, int N, double t_count, double p_sleep){
 
       case SLEEP:
 	if(abs(t_count - n_data[i].activetime) < TCOUNT){
-	  if(n_data[i].state == SLEEP_TEMP) //SenderからBe_ACKを受信した場合
-	    n_data[i].Intlz_Sleep_to_Rx(t_count);
-	  else{
-	    temp = randuni(mt);
-	    if(temp < p_sleep)
-	      n_data[i].next_mode = SLEEP;
-	    else
-	      n_data[i].next_mode = CSMA;
-	  }
+	  n_data[i].Sleep_Change_Mode(t_count, p_sleep);
 	}
 	n_data[i].sleep_time+=TCOUNT;
 	break;
@@ -76,19 +68,17 @@ void Process_node(NODE *n_data, int N, double t_count, double p_sleep){
 	n_data[i].csma_time+=TCOUNT;
     	break;
 	
-    //   case BEACON:
-    // 	n_data[shf[i]].Intlz_Be_to_Re_Be(t_count);
-    // 	n_data[shf[i]].tx_time+=TCOUNT;
-    // 	break;
+      case BEACON:
+    	n_data[i].Beacon_mode(t_count);
+    	n_data[i].tx_time+=TCOUNT;
+    	break;
 
-    //   case Re_Be_ACK: //ACK待機
-    // 	if(abs(n_data[shf[i]].re_be_end - t_count) + SECURE < TCOUNT){
-    // 	  n_data[shf[i]].Intlz_Re_Be_to_CSMA(t_count);
-    // 	}
-    // 	else
-    // 	  Re_Be_func(n_data, t_count, shf[i], p_data);
-    // 	//n_data[shf[i]].rx_time+=TCOUNT;
-    // 	break;
+      case Re_Be_ACK: //ACK    	
+	n_data[i].Re_Be_to_ACK(t_count);
+    	
+	//Re_Be_func(n_data, t_count, shf[i], p_data);
+    	//n_data[shf[i]].rx_time+=TCOUNT;
+    	break;
 	
     //   case TRANSMIT:
     // 	n_data[shf[i]].tr_cnt++;
@@ -163,34 +153,37 @@ void CSMA_CA(NODE *n_data, int N, int num, double t_count){
     }
   }
   
-  // if(j == N){
-  //   if(n_data[node_num].ca_time > 0) n_data[node_num].ca_time = n_data[node_num].ca_time - TCOUNT;
-  //   else if(n_data[node_num].ca_time < TCOUNT){
-  //     switch (n_data[node_num].state){
-  // 	case FALSE:
-  // 	  n_data[node_num].next_mode = BEACON;
-  // 	  n_data[node_num].be_end = t_count + TCOUNT; //Beacon送信時間は1ms
-  // 	  break;	  
-  // 	case SENDER:
-  // 	  if(n_data[node_num].s_end < t_count){ //CSMAなどによりsender終了時刻を飛び越した場合
-  // 	    n_data[node_num].next_mode = TRANSMIT;
-  // 	    n_data[node_num].tr_end = t_count + Tf; //送信終了時刻
-  // 	    n_data[node_num].tr_cnt = 0; //送信終了時刻
-  // 	    Encode(n_data, node_num);
-  // 	  }
-  // 	  else{
-  // 	    n_data[node_num].next_mode = Be_ACK;
-  // 	  }
-  // 	  break;
-  // 	case Re_Be_ACK:
-  // 	  n_data[node_num].next_mode = TRANSMIT;
-  // 	  //n_data[node_num].tr_end = 1; //送信終了時刻
-  // 	  n_data[node_num].tr_end = t_count + Tf; //送信終了時刻
-  // 	  n_data[node_num].tr_cnt = 0; //送信終了時刻
-  // 	  Encode(n_data, node_num);
-  // 	  break;
-  //     }
-  //     if(n_data[node_num].flag != EMPTY && n_data[node_num].state == SENDER) n_data[node_num].n_trn_num++;
-  //   }
-  // }
+  if(i == N){
+    if(n_data[num].ca_time > 0) n_data[num].ca_time = n_data[num].ca_time - TCOUNT;
+    else if(n_data[num].ca_time < TCOUNT){
+       switch (n_data[num].state){
+  	case FALSE:
+  	  n_data[num].next_mode = BEACON;
+  	  n_data[num].be_end = t_count + BEACON_TIME; //Beacon送信時間は1ms
+  	  break;	  
+  	// case SENDER:
+  	//   if(n_data[num].s_end < t_count){ //CSMAなどによりsender終了時刻を飛び越した場合
+  	//     n_data[num].next_mode = TRANSMIT;
+  	//     n_data[num].tr_end = t_count + Tf; //送信終了時刻
+  	//     n_data[num].tr_cnt = 0; //送信終了時刻
+  	//     //Encode(n_data, node_num);
+  	//   }
+  	//   else{
+  	//     n_data[num].next_mode = Be_ACK;
+  	//   }
+  	//   break;
+  	case Re_Be_ACK:
+  	  n_data[num].next_mode = TRANSMIT;
+  	  //n_data[node_num].tr_end = 1; //送信終了時刻
+  	  //n_data[num].tr_end = t_count + Tf; //送信終了時刻
+  	  //n_data[num].tr_cnt = 0; //送信終了時刻
+  	  //Encode(n_data, num);
+  	  break;
+      }
+    }
+  }
+     
+  //if(n_data[node_num].flag != EMPTY && n_data[node_num].state == SENDER) n_data[node_num].n_trn_num++;
 }
+  
+
