@@ -5,17 +5,22 @@
 //#include "awgn.h"
 
 void Initialaize_nodes(NODE *n_data, int N);
-void CSMA_CA(NODE *n_data, int N, int num, double t_count);
+void Process_node(NODE *n_data, int N, double t_count, double p_sleep, list<int> &Beacon_node);
+void CSMA_CA(NODE *n_data, int N, int num, double t_count, list<int> &Beacon_node);
+void Re_Be_func(NODE *n_data, double t_count, int num, int N, list<int> &Beacon_node);
+int MinBack(NODE *n_data, int num, int mode, int N, list<int> &Beacon_node);
 
 int main(){
   int i, j;
   int nowround;
   int N;
+  list<int> Beacon_node;
   double p_sleep;
   double t_count;
   double PPP_CDF[TEMP_NUM] = {0};
   double temp;
 
+  
   NODE *n_data;
   
   PPP(PPP_CDF);
@@ -32,7 +37,8 @@ int main(){
       Initialaize_nodes(n_data, N);
       t_count = 0;
       while(t_count < OBSERVE){
-	
+	Process_node(n_data, N, t_count, p_sleep, Beacon_node);
+	//if(int(t_count) % 5 == 0 && t_count > 1) cout << t_count << endl;
 	t_count += TCOUNT;
       }
     }
@@ -49,7 +55,7 @@ void Initialaize_nodes(NODE *n_data, int N){
   }
 }
 
-void Process_node(NODE *n_data, int N, double t_count, double p_sleep){
+void Process_node(NODE *n_data, int N, double t_count, double p_sleep, list<int> &Beacon_node){
   int i;
   double temp;
 
@@ -64,7 +70,7 @@ void Process_node(NODE *n_data, int N, double t_count, double p_sleep){
 	break;
 
       case CSMA:
-     	CSMA_CA(n_data, N, i, t_count);
+     	CSMA_CA(n_data, N, i, t_count, Beacon_node);
 	n_data[i].csma_time+=TCOUNT;
     	break;
 	
@@ -73,10 +79,12 @@ void Process_node(NODE *n_data, int N, double t_count, double p_sleep){
     	n_data[i].tx_time+=TCOUNT;
     	break;
 
-      case Re_Be_ACK: //ACK    	
-	n_data[i].Re_Be_to_ACK(t_count);
-    	
-	//Re_Be_func(n_data, t_count, shf[i], p_data);
+      case Re_Be_ACK: //ACK
+	if(abs(n_data[i].re_be_end - t_count) < TCOUNT){
+	  //n_data[i].Re_Be_to_ACK(t_count);
+	}
+	else
+	  Re_Be_func(n_data, t_count, i, N, Beacon_node);
     	//n_data[shf[i]].rx_time+=TCOUNT;
     	break;
 	
@@ -133,7 +141,7 @@ void Process_node(NODE *n_data, int N, double t_count, double p_sleep){
 }
 
 //CSMA/CA
-void CSMA_CA(NODE *n_data, int N, int num, double t_count){
+void CSMA_CA(NODE *n_data, int N, int num, double t_count, list<int> &Beacon_node){
   int i,j;
   double dis_node = 0;
   double r_level = 0;
@@ -160,6 +168,7 @@ void CSMA_CA(NODE *n_data, int N, int num, double t_count){
   	case FALSE:
   	  n_data[num].next_mode = BEACON;
   	  n_data[num].be_end = t_count + BEACON_TIME; //Beacon送信時間は1ms
+	  Beacon_node.push_back(num);
   	  break;	  
   	// case SENDER:
   	//   if(n_data[num].s_end < t_count){ //CSMAなどによりsender終了時刻を飛び越した場合
@@ -181,9 +190,57 @@ void CSMA_CA(NODE *n_data, int N, int num, double t_count){
   	  break;
       }
     }
-  }
-     
+  }     
   //if(n_data[node_num].flag != EMPTY && n_data[node_num].state == SENDER) n_data[node_num].n_trn_num++;
+}
+
+//SenderからのACK待ち
+void Re_Be_func(NODE *n_data, double t_count, int num, int N, list<int> &Beacon_node){
+   int temp = -1;
+   int flag = 0;
+   double sinr = 0;
+   uniform_int_distribution<> randCW(0, CW-1);
+ 
+   temp = MinBack(n_data, num, Be_ACK, N, Beacon_node);
+  if(temp != -1){
+    //sinr = SINR(n_data, t_count, num, Be_ACK, p_data);
+    //flag = n_data[temp].flag;
+    //DBPSK(n_data, p_data, sinr, num, temp);
+    //n_data[num].rx_time+=TCOUNT;
+    // if(n_data[num].rec_cnt == SHORTSIZE && n_data[num].timestamp[flag] < n_data[temp].timestamp[flag]){
+    //   n_data[num].next_mode = SLEEP;
+    //   n_data[num].activetime = n_data[temp].s_end;
+    //   n_data[num].next_state = SLEEP_TEMP;
+    //   n_data[temp].rx_nodeNum++;
+    // }
+    // else {
+    //   n_data[num].ca_time = (IFS + randCW(mt) * TIMESLOT);
+    //   n_data[num].next_mode = CSMA;
+    // }
+    //n_data[num].Intlz_DBPSK(t_count);    
+  }
+  //else n_data[num].idle_time+=TCOUNT;
+}
+
+int MinBack(NODE *n_data, int num, int mode, int N){
+  int i;
+  int temp = -1;
+  double distance = 0;
+  double min = 1000000;
+  
+  for(i = 0; i < N; i++){
+    if(i != num){
+      if(n_data[i].mode == mode){
+	distance = sqrt(pow(n_data[num].x - n_data[i].x, 2) + pow(n_data[num].y - n_data[i].y, 2));
+	//distance = abs(n_data[num].node_location - n_data[i].node_location);
+	if(min > distance){
+	  min = distance;
+	  temp = i;
+	}
+      }
+    }
+  }
+  return temp;
 }
   
 
