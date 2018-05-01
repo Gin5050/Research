@@ -5,7 +5,7 @@
 //#include "awgn.h"
 
 void Initialaize_nodes(NODE *n_data, int N);
-void Process_node(NODE *n_data, int N, double t_count, double p_sleep, list<int> &Beacon_node);
+void Process_node(NODE *n_data, int N, double t_count, double p_sleep, list<int> &Beacon_node, list<int> &ACK_node, list<int> &Trans_node, list<int> &All_trans);
 void CSMA_CA(NODE *n_data, int N, int num, double t_count, list<int> &Beacon_node);
 void Re_Be_func(NODE *n_data, double t_count, int num, int N, list<int> &Beacon_node);
 int MinBack(NODE *n_data, int num, int mode, int N, list<int> &Beacon_node);
@@ -15,6 +15,9 @@ int main(){
   int nowround;
   int N;
   list<int> Beacon_node;
+  list<int> ACK_node;
+  list<int> Trans_node;
+  list<int> All_trans;
   double p_sleep;
   double t_count;
   double PPP_CDF[TEMP_NUM] = {0};
@@ -37,8 +40,8 @@ int main(){
       Initialaize_nodes(n_data, N);
       t_count = 0;
       while(t_count < OBSERVE){
-	Process_node(n_data, N, t_count, p_sleep, Beacon_node);
-	//if(int(t_count) % 5 == 0 && t_count > 1) cout << t_count << endl;
+	Process_node(n_data, N, t_count, p_sleep, Beacon_node, ACK_node, Trans_node, All_trans);
+	//if(int(t_count) % 10 == 0 && t_count > 1) cout << t_count << endl;
 	t_count += TCOUNT;
       }
     }
@@ -55,38 +58,38 @@ void Initialaize_nodes(NODE *n_data, int N){
   }
 }
 
-void Process_node(NODE *n_data, int N, double t_count, double p_sleep, list<int> &Beacon_node){
+void Process_node(NODE *n_data, int N, double t_count, double p_sleep, list<int> &Beacon_node, list<int> &ACK_node, list<int> &Trans_node, list<int> &All_trans){
   int i;
   double temp;
 
   for(i = 0; i < N; i++){
     switch (n_data[i].mode){
 
-      case SLEEP:
-	if(abs(t_count - n_data[i].activetime) < TCOUNT){
-	  n_data[i].Sleep_Change_Mode(t_count, p_sleep);
-	}
-	n_data[i].sleep_time+=TCOUNT;
-	break;
+      // case SLEEP:
+      // 	// if(abs(t_count - n_data[i].activetime) < TCOUNT){
+      // 	//   n_data[i].Sleep_Change_Mode(t_count, p_sleep);
+      // 	// }
+      // 	n_data[i].sleep_time+=TCOUNT;
+      // 	break;
 
-      case CSMA:
-     	CSMA_CA(n_data, N, i, t_count, Beacon_node);
-	n_data[i].csma_time+=TCOUNT;
-    	break;
+      // case CSMA:
+      // 	CSMA_CA(n_data, N, i, t_count, Beacon_node);
+      // 	n_data[i].csma_time+=TCOUNT;
+      // 	break;
 	
-      case BEACON:
-    	n_data[i].Beacon_mode(t_count);
-    	n_data[i].tx_time+=TCOUNT;
-    	break;
+      // case BEACON:
+      // 	n_data[i].Beacon_mode(t_count);
+      // 	n_data[i].tx_time+=TCOUNT;
+      // 	break;
 
-      case Re_Be_ACK: //ACK
-	if(abs(n_data[i].re_be_end - t_count) < TCOUNT){
-	  //n_data[i].Re_Be_to_ACK(t_count);
-	}
-	else
-	  Re_Be_func(n_data, t_count, i, N, Beacon_node);
-    	//n_data[shf[i]].rx_time+=TCOUNT;
-    	break;
+      // case Re_Be_ACK: //ACK
+      // 	if(abs(n_data[i].re_be_end - t_count) < TCOUNT){
+      // 	  //n_data[i].Re_Be_to_ACK(t_count);
+      // 	}
+      // 	else
+      // 	  Re_Be_func(n_data, t_count, i, N, Beacon_node);
+      // 	//n_data[shf[i]].rx_time+=TCOUNT;
+      // 	break;
 	
     //   case TRANSMIT:
     // 	n_data[shf[i]].tr_cnt++;
@@ -222,24 +225,77 @@ void Re_Be_func(NODE *n_data, double t_count, int num, int N, list<int> &Beacon_
   //else n_data[num].idle_time+=TCOUNT;
 }
 
-int MinBack(NODE *n_data, int num, int mode, int N){
+// double SINR(NODE *n_data, double t_count, int num, int mode, Parameters *p_data){
+//   int i;
+//   int nummode = n_data[num].mode;
+//   int temp = -1;
+//   double distance = 0;
+//   double min = 100000;
+//   double interference = 0;
+//   double loss = 0;
+//   double sinr = 0;
+//   complex<double> x;
+//   double fading = 0;
+
+//   //calculate minimum distance
+//   for(i = 0; i < N; i++){
+//     if(i != num){
+//       if(n_data[i].mode == mode){
+// 	distance = sqrt(pow(n_data[num].x - n_data[i].x, 2) + pow(n_data[num].y - n_data[i].y, 2));
+// 	if(min > distance){
+// 	  min = distance;
+// 	  temp = i;
+// 	}
+//       }
+//     }
+//   }
+
+//   //calculate SINR
+//   if(temp != -1){
+//     for(i = 0; i < N; i++){
+//       if(num != i && temp != i){
+// 	if(n_data[i].mode == TRANSMIT || n_data[i].mode == BEACON ||
+// 	   n_data[i].mode == Be_ACK || n_data[i].mode == COLLISION_MG){
+// 	  distance = sqrt(pow(n_data[num].x - n_data[i].x, 2) + pow(n_data[num].y - n_data[i].y, 2));
+// 	  //distance = abs(n_data[num].node_location - n_data[i].node_location);
+// 	  loss = Pathloss(distance, PATHLOSS_num);
+// 	  x = channel[num][i];
+// 	  fading = 10 * log10(abs(x) * abs(x));
+// 	  interference += (pow(10, (fading + loss) / 10.0));
+// 	  if(nummode != RECEIVE &&  nummode != SENDER)
+// 	    Collision_check_sensor(n_data, p_data, t_count, num, i);
+// 	}
+//       }
+//     }
+//     loss = Pathloss(min, PATHLOSS_num);
+//     x = channel[num][temp];
+//     fading = 10 * log10(abs(x) * abs(x));
+//     sinr = loss + fading - (10 * log10(interference + NOISE));
+//     //cout << sinr << "\t" << temp << "\t" << num << "\t" << min << "\t" << interference << "\t" << fading << endl;
+//   }
+//   return sinr;
+// }
+
+int MinBack(NODE *n_data, int num, int mode, int N, list<int> &Beacon_node){
   int i;
   int temp = -1;
   double distance = 0;
   double min = 1000000;
-  
-  for(i = 0; i < N; i++){
-    if(i != num){
-      if(n_data[i].mode == mode){
-	distance = sqrt(pow(n_data[num].x - n_data[i].x, 2) + pow(n_data[num].y - n_data[i].y, 2));
-	//distance = abs(n_data[num].node_location - n_data[i].node_location);
+  list<int> ::iterator it;
+
+  it = Beacon_node.begin();
+  while(it != Beacon_node.end()){
+    if(*it != num){
+      if(n_data[*it].mode == mode){
+	distance = sqrt(pow(n_data[num].x - n_data[*it].x, 2) + pow(n_data[num].y - n_data[*it].y, 2));
 	if(min > distance){
 	  min = distance;
 	  temp = i;
 	}
       }
     }
-  }
+    ++it;
+  }    
   return temp;
 }
   
