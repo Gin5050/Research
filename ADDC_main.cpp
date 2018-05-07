@@ -216,7 +216,7 @@ void Re_Be_func(NODE *n_data, double t_count, int num, int N, list<int> &Beacon_
    if(temp != -1){
      sinr = SINR(n_data, t_count, num, temp, Be_ACK, All_trans);
      DBPSK(n_data, sinr, num, temp);
-     
+     //if(n_data[num].rec_cnt == )
     //n_data[num].rx_time+=TCOUNT;
     // if(n_data[num].rec_cnt == SHORTSIZE && n_data[num].timestamp[flag] < n_data[temp].timestamp[flag]){
     //   n_data[num].next_mode = SLEEP;
