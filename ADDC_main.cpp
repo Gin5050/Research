@@ -15,13 +15,6 @@ void DBPSK(NODE *n_data, double sinr, int num, int temp);
 int main(){
   int i, j;
   int nowround;
-  int N;
-  list<int> Beacon_node;
-  list<int> ACK_node;
-  list<int> Trans_node;
-  list<int> All_trans;
-  double p_sleep;
-  double t_count;
   double PPP_CDF[TEMP_NUM] = {0};
   double temp;
 
