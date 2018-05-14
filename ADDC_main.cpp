@@ -19,6 +19,9 @@ int main(){
   double p_sleep;
   double t_count;  
   Operater *operate;
+
+  //ToDo
+  //define.h内のCalculatorにおいてCarrierSense関数を実装中
   
   for(p_sleep = 0.5; p_sleep < 0.6; p_sleep += 0.1){
 
@@ -35,14 +38,6 @@ int main(){
   }
   return 0;
 }
-
-// void Initialaize_nodes(NODE *n_data, int N){
-//   int i,j;
-  
-//   for(i = 0; i < N; i++){
-//     n_data[i].Initialaze(i);
-//   }
-// }
 
 void Process_node(NODE *n_data, int N, double t_count, double p_sleep, list<int> &Beacon_node, list<int> &ACK_node, list<int> &Trans_node, list<int> &All_trans){
   int i;
