@@ -23,6 +23,7 @@ int main(){
   //ToDo
   //define.h内のCalculatorにおいてCarrierSense関数を実装中
   //define.hのOperatorクラス内のCSMA_CA関数を実装中
+  //Calculatorクラスの処理の細分化に悩み中
   
   for(p_sleep = 0.5; p_sleep < 0.6; p_sleep += 0.1){
 
