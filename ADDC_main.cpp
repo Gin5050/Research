@@ -33,7 +33,7 @@ int main(){
       operate->InitialaizeNodes();
       t_count = 0;
       while(t_count < OBSERVE){
-	
+	operate.updateNodes();
 	t_count+=TCOUNT;
       }
     }
