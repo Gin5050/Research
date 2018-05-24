@@ -26,6 +26,7 @@ int main(){
   //Calculatorクラスの処理の細分化に悩み中
   //CalcUtileクラスを作成．その中にSINRを計算する関数を記述中
   //channelクラスを生成
+  //Re_Be_ACK処理のためにDBPSKを含む信号受信処理を記述中
   
   for(p_sleep = 0.5; p_sleep < 0.6; p_sleep += 0.1){
 
