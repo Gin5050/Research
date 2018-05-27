@@ -19,6 +19,7 @@ int main(){
   double p_sleep;
   double t_count;  
   Operater *operate;
+  vector<double> PPP_CDF(TEMP_NUM);
 
   //ToDo
   //define.h内のCalculatorにおいてCarrierSense関数を実装中
@@ -27,16 +28,17 @@ int main(){
   //CalcUtileクラスを作成．その中にSINRを計算する関数を記述中
   //channelクラスを生成
   //Re_Be_ACK処理のためにDBPSKを含む信号受信処理を記述中
-  
-  for(p_sleep = 0.5; p_sleep < 0.6; p_sleep += 0.1){
 
+  
+  for(p_sleep = 0.5; p_sleep < 0.6; p_sleep += 0.1){    
     for(nowround = 0; nowround < REPEATNUM; nowround++){
       temp = randuni(mt);
-      operate = new Operater(calc.PPP(temp));
-      operate->InitialaizeNodes();
+      operate = new Operater((CalcUtile::PPP(PPP_CDF, randuni(mt))), p_sleep);
+      operate->initialaizeNodes();
       t_count = 0;
       while(t_count < OBSERVE){
-	operate.UpdateNodes();
+	operate->updateNodes();
+	operate->processNodes(t_count);
 	t_count+=TCOUNT;
       }
     }
