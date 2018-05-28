@@ -19,6 +19,8 @@ int main(){
   double p_sleep;
   double t_count;  
   Operater *operate;
+  MovingSink *car;
+  Calculator *calc;
   vector<double> PPP_CDF(TEMP_NUM);
 
   //ToDo
@@ -28,19 +30,43 @@ int main(){
   //CalcUtileクラスを作成．その中にSINRを計算する関数を記述中
   //channelクラスを生成
   //Re_Be_ACK処理のためにDBPSKを含む信号受信処理を記述中
-
+  //車両オブジェクトの作成を行う
   
   for(p_sleep = 0.5; p_sleep < 0.6; p_sleep += 0.1){    
     for(nowround = 0; nowround < REPEATNUM; nowround++){
-      temp = randuni(mt);
+      
+      //操作用オブジェクト生成
       operate = new Operater((CalcUtile::PPP(PPP_CDF, randuni(mt))), p_sleep);
+
+      //計算用オブジェクト生成
+      calc = new Calculator();
+
+      //受信車両オブジェクト生成
+      car = new MovingSink();
+      
+      //Nodesを初期化
       operate->initialaizeNodes();
+      
       t_count = 0;
+      
+      //観測開始
       while(t_count < OBSERVE){
-	operate->updateNodes();
-	operate->processNodes(t_count);
+	
+	//Nodeの状態を更新
+	operate->updateNodes(calc);
+	
+	//各Nodesの処理分岐
+	operate->processNodes(t_count, calc);
+
+	//車両受信処理
+	car->receiveProcess(calc, n_data);
+		
+	//operate->printNodesMode(t_count);
 	t_count+=TCOUNT;
       }
+      delete operat;
+      delete calc;
+      delete car;
     }
   }
   return 0;
