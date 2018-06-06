@@ -173,8 +173,12 @@ class NODE{
   double be_end;
   double re_be_end;
   double txEnd;
+  double phase0[WAVENUM];
+  double arrival_angle[WAVENUM];
   complex<double> fading;
-  complex<double> m_prev;  
+  complex<double> m_prev;
+  complex<double> chanel_num;
+  complex<double> I;
 
   NODE(){
     id = -1;
@@ -195,7 +199,9 @@ class NODE{
     be_end = 0;
     re_be_end = 0;
     fading = complex<double> (0,0);
-    m_prev = complex<double> (0,0);    
+    m_prev = complex<double> (0,0);
+    chanel_num = complex<double> (0,0);
+    I = complex< double > (0,1);
   }
   ~NODE(){}
 
@@ -211,6 +217,11 @@ class NODE{
     x = randX(mt);
     y = randY(mt);
     activetime = randSint(mt);
+
+    for(i = 0; i < WAVENUM; i++){
+      phase0[i] = PHASE(mt);
+      arrival_angle[i] = PHASE(mt) + 2 * M_PI * ((double)i / (double)WAVENUM);
+    }
   }
 
   /*---------------------各モード処理-------------------------*/
@@ -341,6 +352,16 @@ class NODE{
     }
     rec_cnt += i;
   }
+  void jakes(double t_count){
+    int i;
+    chanel_num = 0;
+
+    for(i = 0; i < WAVENUM; i++){      
+      chanel_num += exp(I * (phase0[i] + 2 * M_PI * DOPPLER * cos(arrival_angle[i]) * t_count));
+    }   
+    chanel_num = chanel_num / (sqrt(WAVENUM));
+  }
+
 };
 
 class CalcUtile{
@@ -538,19 +559,13 @@ class MovingSink{
   double y;
   complex<double> fading;
   complex<double> m_prev;
-  complex<double> chanel_num;
-  complex<double> I;
-  double phase0[WAVENUM];
-  double arrival_angle[WAVENUM];
-
+  
   MovingSink(){
     x = 0;
     y = 0;
     recPackets = 0;
     fading = complex<double> (0,0);
-    m_prev = complex<double> (0,0);
-    chanel_num = complex<double> (0,0);
-    I = complex< double > (0,1);
+    m_prev = complex<double> (0,0);  
   }
 
   void initialization(){
@@ -561,27 +576,21 @@ class MovingSink{
   void receiveProcess(Calculator calc, NODE *n_data){
     int minNode = EMPTY;
     double sinr = 0;
+    double fadingDb = 0;
     
     if(calc.searchTx(x, y, n_data) == EMPTY){
       return;
     }
     minNode = CalcUtile::MinNode(x, y, calc.getTransNodes());
     sinr = calc.calcSinr(n_data, x, y, minNode);
-    
+    fadingDb = 10 * log10(abs(n_data[minNode].jakes) * abs(n_data[minNode].jakes));
   }
 
-   void jakes(double t_count){
-    int i;
-    chanel_num = 0;
+  void DBPSK(){
 
-    for(i = 0; i < WAVENUM; i++){
-      phase0[i] = PHASE(mt);
-      arrival_angle[i] = PHASE(mt) + 2 * M_PI * ((double)i / (double)WAVENUM);
-      chanel_num += exp(I * (phase0[i] + 2 * M_PI * DOPPLER * cos(arrival_angle[i]) * t_count));
-    }   
-    chanel_num = chanel_num / (sqrt(WAVENUM));
   }
 
+   
   
   ~MovingSink(){}
 
