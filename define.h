@@ -391,8 +391,10 @@ class CalcUtile{
     return nodeId;
   }
 
-  
+  void DBPSK(){
 
+  }
+  
   static int PPP(vector<double> &PPP_CDF, double randomValue){
     int i, j, k;
     int split = 0;
@@ -478,7 +480,7 @@ class Calculator{
   int searchBeacon(double x, double y, NODE *n_data){
     int nodeId = CalcUtile::MinNode(x, y, Beacon_node, n_data);
 
-a     if(nodeId == EMPTY){
+   if(nodeId == EMPTY){
       return EMPTY;
     }
     return nodeId;
@@ -584,13 +586,7 @@ class MovingSink{
     minNode = CalcUtile::MinNode(x, y, calc.getTransNodes());
     sinr = calc.calcSinr(n_data, x, y, minNode);
     fadingDb = 10 * log10(abs(n_data[minNode].jakes) * abs(n_data[minNode].jakes));
-  }
-
-  void DBPSK(){
-
-  }
-
-   
+  } 
   
   ~MovingSink(){}
 
