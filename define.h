@@ -352,7 +352,8 @@ class NODE{
     }
     rec_cnt += i;
   }
-  void jakes(double t_count){
+  
+  complex<double> jakes(double t_count){
     int i;
     chanel_num = 0;
 
@@ -360,6 +361,7 @@ class NODE{
       chanel_num += exp(I * (phase0[i] + 2 * M_PI * DOPPLER * cos(arrival_angle[i]) * t_count));
     }   
     chanel_num = chanel_num / (sqrt(WAVENUM));
+    return chanel_num;
   }
 
 };
@@ -391,8 +393,36 @@ class CalcUtile{
     return nodeId;
   }
 
-  void DBPSK(){
+  static complex<double> getConsteration(NODE *n_data, int txId, double t_count){
+    complex<double> x;  
+    complex<double> m_temp;
+    
+    x = n_data[txId].jakes(t_count);
+    
+    //1シンボル遅延
+    m_temp = complex<double>(1.0,0);
+    m_temp = m_temp * x;
+    m_temp += complex<double>(Channel::awgnQ(sinr), Channel::awgnI(sinr));
+    return m_temp;
+  }
 
+  int DBPSK(double sinr, complex<double> channelNum, complex<double> m_prev, int txId){
+    int i;
+    double p_d = 0; 
+    complex<double> m_temp;
+
+    //DBPSK 1us分の受信
+    for(i = 0; i < DATARATE * TCOUNT; i++){
+      m_temp = complex<double>(1.0,0);
+      m_temp = m_temp * channelNum;
+      m_temp += complex<double>(Channel::awgnQ(sinr), Channel::awgnI(sinr));     
+      p_d = abs(arg(m_prev) - arg(m_temp));
+      m_prev = m_temp;
+      if(cos(p_d) < 0){ //1bitでも誤った場合は終了
+	break;
+      }
+    }
+    return i;
   }
   
   static int PPP(vector<double> &PPP_CDF, double randomValue){
@@ -557,6 +587,8 @@ class Calculator{
 class MovingSink{
  public:
   int recPackets;
+  int recCount;
+  int coneectedNode;
   double x;
   double y;
   complex<double> fading;
@@ -566,6 +598,8 @@ class MovingSink{
     x = 0;
     y = 0;
     recPackets = 0;
+    recCount = 0;
+    coneectedNode = 0;
     fading = complex<double> (0,0);
     m_prev = complex<double> (0,0);  
   }
@@ -575,7 +609,7 @@ class MovingSink{
     y = Y_RANGE / 2.0;    
   }
 
-  void receiveProcess(Calculator calc, NODE *n_data){
+  void receiveProcess(Calculator calc, NODE *n_data, double t_count){
     int minNode = EMPTY;
     double sinr = 0;
     double fadingDb = 0;
@@ -586,10 +620,16 @@ class MovingSink{
     minNode = CalcUtile::MinNode(x, y, calc.getTransNodes());
     sinr = calc.calcSinr(n_data, x, y, minNode);
     fadingDb = 10 * log10(abs(n_data[minNode].jakes) * abs(n_data[minNode].jakes));
-  } 
+    if(recCount == 0){
+      m_prev = CalcUtile::setConsteration(n_data, minNode, t_count);
+    }
+    else{
+
+    }
+    
+  }
   
   ~MovingSink(){}
-
 };
 
 //Nodeに関連した処理を行う．
