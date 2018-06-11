@@ -405,25 +405,6 @@ class CalcUtile{
     m_temp += complex<double>(Channel::awgnQ(sinr), Channel::awgnI(sinr));
     return m_temp;
   }
-
-  int DBPSK(double sinr, complex<double> channelNum, complex<double> m_prev, int txId){
-    int i;
-    double p_d = 0; 
-    complex<double> m_temp;
-
-    //DBPSK 1us分の受信
-    for(i = 0; i < DATARATE * TCOUNT; i++){
-      m_temp = complex<double>(1.0,0);
-      m_temp = m_temp * channelNum;
-      m_temp += complex<double>(Channel::awgnQ(sinr), Channel::awgnI(sinr));     
-      p_d = abs(arg(m_prev) - arg(m_temp));
-      m_prev = m_temp;
-      if(cos(p_d) < 0){ //1bitでも誤った場合は終了
-	break;
-      }
-    }
-    return i;
-  }
   
   static int PPP(vector<double> &PPP_CDF, double randomValue){
     int i, j, k;
@@ -588,6 +569,7 @@ class MovingSink{
  public:
   int recPackets;
   int recCount;
+  int recBits;
   int coneectedNode;
   double x;
   double y;
@@ -599,6 +581,7 @@ class MovingSink{
     y = 0;
     recPackets = 0;
     recCount = 0;
+    recBits = 0;
     coneectedNode = 0;
     fading = complex<double> (0,0);
     m_prev = complex<double> (0,0);  
@@ -619,14 +602,33 @@ class MovingSink{
     }
     minNode = CalcUtile::MinNode(x, y, calc.getTransNodes());
     sinr = calc.calcSinr(n_data, x, y, minNode);
-    fadingDb = 10 * log10(abs(n_data[minNode].jakes) * abs(n_data[minNode].jakes));
+    fadingDb = 10 * log10(abs(n_data[minNode].jakes(t_count)) * abs(n_data[minNode].jakes(t_count)));
     if(recCount == 0){
       m_prev = CalcUtile::setConsteration(n_data, minNode, t_count);
     }
     else{
-
+      recBits = DBPSK(sinr, n_data[minNode].channel_num, minNode);
     }
     
+  }
+
+  int DBPSK(double sinr, complex<double> channelNum, int txId){
+    int i;
+    double p_d = 0; 
+    complex<double> m_temp;
+
+    //DBPSK 1us分の受信
+    for(i = 0; i < DATARATE * TCOUNT; i++){
+      m_temp = complex<double>(1.0,0);
+      m_temp = m_temp * channelNum;
+      m_temp += complex<double>(Channel::awgnQ(sinr), Channel::awgnI(sinr));     
+      p_d = abs(arg(m_prev) - arg(m_temp));
+      m_prev = m_temp;
+      if(cos(p_d) < 0){ //1bitでも誤った場合は終了
+	break;
+      }
+    }
+    return i;
   }
   
   ~MovingSink(){}
