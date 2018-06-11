@@ -604,12 +604,20 @@ class MovingSink{
     sinr = calc.calcSinr(n_data, x, y, minNode);
     fadingDb = 10 * log10(abs(n_data[minNode].jakes(t_count)) * abs(n_data[minNode].jakes(t_count)));
     if(recCount == 0){
+      connectedNode = minNode;
       m_prev = CalcUtile::setConsteration(n_data, minNode, t_count);
     }
-    else{
-      recBits = DBPSK(sinr, n_data[minNode].channel_num, minNode);
+    recCount++;
+    recBits += DBPSK(sinr, n_data[minNode].channel_num, minNode);
+    if(connectedNode == minNode && recBits == PACKETSIZE){
+      recPackets++;     
+      initialazeRecProcess();
+      return;
     }
-    
+    if(recCount == PACKETSIZE / DATARATE){ //あとで確認
+      initialazeRecProcess();
+      return;
+    }
   }
 
   int DBPSK(double sinr, complex<double> channelNum, int txId){
@@ -629,6 +637,13 @@ class MovingSink{
       }
     }
     return i;
+  }
+
+  void initialazeRecProcess(){
+    recBits = 0;
+    connectedNode = EMPTY;
+    recCount = 0;
+    m_prev = complex<double> (0,0); 
   }
   
   ~MovingSink(){}
