@@ -148,7 +148,6 @@ class Channel{
     
     return fading;
   }
-  
 };
 
 class NODE{
@@ -177,7 +176,7 @@ class NODE{
   double arrival_angle[WAVENUM];
   complex<double> fading;
   complex<double> m_prev;
-  complex<double> chanel_num;
+  complex<double> channel_num;
   complex<double> I;
 
   NODE(){
@@ -200,7 +199,7 @@ class NODE{
     re_be_end = 0;
     fading = complex<double> (0,0);
     m_prev = complex<double> (0,0);
-    chanel_num = complex<double> (0,0);
+    channel_num = complex<double> (0,0);
     I = complex< double > (0,1);
   }
   ~NODE(){}
@@ -355,13 +354,13 @@ class NODE{
   
   complex<double> jakes(double t_count){
     int i;
-    chanel_num = 0;
+    //chanel_num = 0;
 
     for(i = 0; i < WAVENUM; i++){      
-      chanel_num += exp(I * (phase0[i] + 2 * M_PI * DOPPLER * cos(arrival_angle[i]) * t_count));
+      channel_num += exp(I * (phase0[i] + 2 * M_PI * DOPPLER * cos(arrival_angle[i]) * t_count));
     }   
-    chanel_num = chanel_num / (sqrt(WAVENUM));
-    return chanel_num;
+    channel_num = channel_num / (sqrt(WAVENUM));
+    return channel_num;
   }
 
 };
@@ -393,7 +392,7 @@ class CalcUtile{
     return nodeId;
   }
 
-  static complex<double> getConsteration(NODE *n_data, int txId, double t_count){
+  static complex<double> getConsteration(NODE *n_data, double sinr, int txId, double t_count){
     complex<double> x;  
     complex<double> m_temp;
     
@@ -570,7 +569,7 @@ class MovingSink{
   int recPackets;
   int recCount;
   int recBits;
-  int coneectedNode;
+  int connectedNode;
   double x;
   double y;
   complex<double> fading;
@@ -582,7 +581,7 @@ class MovingSink{
     recPackets = 0;
     recCount = 0;
     recBits = 0;
-    coneectedNode = 0;
+    connectedNode = 0;
     fading = complex<double> (0,0);
     m_prev = complex<double> (0,0);  
   }
@@ -592,7 +591,7 @@ class MovingSink{
     y = Y_RANGE / 2.0;    
   }
 
-  void receiveProcess(Calculator calc, NODE *n_data, double t_count){
+  void receiveProcess(Calculator *calc, NODE *n_data, double t_count){
     int minNode = EMPTY;
     double sinr = 0;
     double fadingDb = 0;
@@ -600,12 +599,12 @@ class MovingSink{
     if(calc.searchTx(x, y, n_data) == EMPTY){
       return;
     }
-    minNode = CalcUtile::MinNode(x, y, calc.getTransNodes());
+    minNode = CalcUtile::MinNode(x, y, calc.getTransNodes(), n_data);
     sinr = calc.calcSinr(n_data, x, y, minNode);
     fadingDb = 10 * log10(abs(n_data[minNode].jakes(t_count)) * abs(n_data[minNode].jakes(t_count)));
     if(recCount == 0){
       connectedNode = minNode;
-      m_prev = CalcUtile::setConsteration(n_data, minNode, t_count);
+      m_prev = CalcUtile::getConsteration(n_data, sinr, minNode, t_count);
     }
     recCount++;
     recBits += DBPSK(sinr, n_data[minNode].channel_num, minNode);
@@ -654,14 +653,15 @@ class Operater{
  public:
   int N;
   int minNode;
-  NODE *n_data; 
-  //Calculator calc;
+  NODE *n_data;
+  MovingSink *car;
   double sinr;  
   double p_sleep;
 
   Operater(int nodeNum, double sleep){
     n_data = new NODE[nodeNum];  
     N = nodeNum;
+    car = new MovingSink();     //受信車両オブジェクト生成
     minNode = EMPTY;
     sinr = 0;
     p_sleep = sleep;
@@ -673,7 +673,7 @@ class Operater{
     }
   }
 
-  void processNodes(double t_count, Calculator calc){
+  void processNodes(double t_count, Calculator *calc){
     
     for(int i = 0; i < N; i++){
       switch (n_data[i].mode){
@@ -682,7 +682,7 @@ class Operater{
 	  break;
 
 	case CSMA:
-	  n_data[i].csmaCaProcess(t_count, calc.CarrierSense(n_data, i));	  
+	  n_data[i].csmaCaProcess(t_count, calc->CarrierSense(n_data, i));	  
 	  break;
 
 	case BEACON:
@@ -690,8 +690,8 @@ class Operater{
 	  break;
 
 	case Re_Be_ACK:
-	  minNode = calc.searchAck(n_data[i].x, n_data[i].y, n_data);
-	  sinr = calc.calcSinr(n_data, n_data[i].x, n_data[i].y, minNode);
+	  minNode = calc->searchAck(n_data[i].x, n_data[i].y, n_data);
+	  sinr = calc->calcSinr(n_data, n_data[i].x, n_data[i].y, minNode);
 	  n_data[i].Re_Be_ACK_Process(t_count, n_data, minNode, sinr);
 	  break;
 
@@ -702,19 +702,27 @@ class Operater{
     }
   }
 
-  void updateNodes(Calculator calc){
+  void initialazeCar(){
+    car->initialization();
+  }
+  
+  void carReceiveProcess(Calculator *calc, double t_count){
+    car->receiveProcess(calc, n_data, t_count);
+  }
+
+  void updateNodes(Calculator *calc){
     for(int i = 0; i < N; i++){
       switch (n_data[i].next_mode){
 	case BEACON:
-	  calc.addBeacon(i);
+	  calc->addBeacon(i);
 	  break;
 	  
 	case TRANSMIT:
-	  calc.addTrans(i);
+	  calc->addTrans(i);
 	  break;
 
 	case Re_Be_ACK:
-	  calc.addReBeAck(i);
+	  calc->addReBeAck(i);
 	  break;
       }
       n_data[i].mode = n_data[i].next_mode;
