@@ -15,7 +15,7 @@
 
 using namespace std;;
 
-#define OBSERVE 1 //second
+#define OBSERVE 10 //second
 #define REPEATNUM 1			//繰り返し回数
 #define TCOUNT 0.000001
 #define PACKETSIZE 500				//パケットの構成ビット
@@ -91,7 +91,7 @@ class Channel;
 class MovingSink;
 
 class Channel{
- public:
+public:
 
   static double pathLoss(double dis, double val){
     return (POWER_dBm + LOG_WAVE - 10 * val *log10(dis));
@@ -160,6 +160,7 @@ class NODE{
   int rec_time;
   int connect;
   int rec_cnt;
+  int transCount;
   int memory[MEMORY];
   double x;
   double y;
@@ -188,6 +189,7 @@ class NODE{
     rec_time = 0;
     connect = EMPTY;
     rec_cnt = 0;
+    transCount = 0;
     x = 0;
     y = 0;
     activetime = 0;
@@ -310,6 +312,7 @@ class NODE{
     next_mode = TRANSMIT;
     next_state = TRANSMIT;
     txEnd = t_count + (double)(PACKETSIZE / DATARATE);
+    transCount++;
   }
 
   void CsmaCaToBeacon(double t_count){
@@ -707,6 +710,7 @@ class Operater{
   }
   
   void carReceiveProcess(Calculator *calc, double t_count){
+    car->x += (t_count * V_m); 
     car->receiveProcess(calc, n_data, t_count);
   }
 
@@ -729,7 +733,24 @@ class Operater{
     }
   }
 
-  void printNodesMode(double t_count){
+  int getNodeNum(){
+    return N;
+  }
+  
+  NODE getNodes(){
+    return n_data;
+  }
+
+  MovingSink getCar(){
+    return car;
+  }
+  
+  ~Operater(){};
+};
+
+class Print{
+ public:
+  static void printNodesMode(NODE *n_data, int N, double t_count){
     for(int i = 0; i < N; i++){
       if((n_data[i].mode != SLEEP) && (n_data[i].mode != Re_Be_ACK)){
 	cout << t_count << "\t" << i << "\t" << n_data[i].mode << endl;
@@ -737,12 +758,18 @@ class Operater{
     }
   }
 
-  void printNodesActiveTime(){
+  static void printNodesActiveTime(NODE *n_datam, int N){
     for(int i = 0; i < N; i++){      
-	cout  << i << "\t" << n_data[i].activetime << endl;
+      cout  << i << "\t" << n_data[i].activetime << endl;
     }
   }
-  
-  
-  ~Operater(){};
+
+  static  void printRecAndTransPacket(NODE *n_data, MovingSink *car, int N){
+    int cnt = 0;
+    cout << "RecPacket\t" << car->recPackets;
+    for(int i = 0; i < N; i++ ){
+      cnt += n_data[i].transCount;
+    }
+    cout << "TransPacket\t" << cnt << endl;
+  }
 };
