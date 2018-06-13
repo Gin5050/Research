@@ -374,7 +374,7 @@ class CalcUtile{
     return (sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2)));
   }
 
-  static int MinNode(double x, double y, list<int> &nodes, NODE *n_data){
+  static int MinNode(double x, double y, list<int> nodes, NODE *n_data){
     list<int> ::iterator it;
     double distance;
     int min = 10000000;
@@ -596,11 +596,11 @@ class MovingSink{
     double sinr = 0;
     double fadingDb = 0;
     
-    if(calc.searchTx(x, y, n_data) == EMPTY){
+    if(calc->searchTx(x, y, n_data) == EMPTY){
       return;
     }
-    minNode = CalcUtile::MinNode(x, y, calc.getTransNodes(), n_data);
-    sinr = calc.calcSinr(n_data, x, y, minNode);
+    minNode = CalcUtile::MinNode(x, y, calc->getTransNodes(), n_data);
+    sinr = calc->calcSinr(n_data, x, y, minNode);
     fadingDb = 10 * log10(abs(n_data[minNode].jakes(t_count)) * abs(n_data[minNode].jakes(t_count)));
     if(recCount == 0){
       connectedNode = minNode;
