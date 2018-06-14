@@ -737,11 +737,11 @@ class Operater{
     return N;
   }
   
-  NODE getNodes(){
+  NODE& getNodes(){
     return n_data;
   }
 
-  MovingSink getCar(){
+  MovingSink& getCar(){
     return car;
   }
   
@@ -758,7 +758,7 @@ class Print{
     }
   }
 
-  static void printNodesActiveTime(NODE *n_datam, int N){
+  static void printNodesActiveTime(NODE *n_data, int N){
     for(int i = 0; i < N; i++){      
       cout  << i << "\t" << n_data[i].activetime << endl;
     }
