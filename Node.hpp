@@ -162,8 +162,7 @@ class NODE{
       next_state = CSMA;
       prevState = Re_Be_ACK;
       ca_time = SIFS + TIMESLOT * randCW(mt);
-      rec_time = 0;
-      cout << id << endl;
+      rec_time = 0;      
     }
     /*受信処理*/
     if(minNode == EMPTY){

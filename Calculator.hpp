@@ -82,6 +82,7 @@ class Calculator{
 	fading = 10 * log10(abs(chnlCoeff) * abs(chnlCoeff));
 	interference += (pow(10, (fading + loss) / 10.0));
       }
+      it++;
     }
     distance = CalcUtile::NodesDistance(x, y, n_data[minNode].x, n_data[minNode].y);
     loss = Channel::pathLoss(distance, PATHLOSS_num);

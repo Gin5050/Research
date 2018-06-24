@@ -25,6 +25,7 @@ class CalcUtile{
 	min = distance;
 	nodeId = *it;
       }
+      it++;
     }
     return nodeId;
   }

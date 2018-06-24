@@ -63,9 +63,8 @@ int main(){
 
 	//車両受信処理
 	operate->carReceiveProcess(calc, t_count);
-
-	cout << (double)((t_count / OBSERVE) * 100) << endl;
-	if(abs(((double)(t_count / OBSERVE) * 100) - cnt) < 0){
+	
+	if(abs(((double)(t_count / OBSERVE) * 100) - cnt) < 0.1){
 	  cout << ((t_count / OBSERVE) * 100) << endl;
 	  cnt+=0.1;
 	}
