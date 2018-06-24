@@ -1,3 +1,17 @@
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+#include <ctime>
+#include <cstdlib>
+#include <vector>
+#include <complex>
+#include <random>
+#include <fstream>
+#include <list>
+#include <cfloat>
+
+using namespace std;;
+
 #include "define.h"
 // #include "system.h"
 // #include "channel.h"
