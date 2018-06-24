@@ -96,7 +96,10 @@ class NODE{
 	next_state = SLEEP;
 	activetime = t_count + Sint;
 	return;
-      }      
+      }
+      if(id == 0){
+	cout << "SLEEP end\t" << t_count << endl;
+      }
       next_mode = CSMA;
       next_state = CSMA;
       prevState = SLEEP;
@@ -110,6 +113,9 @@ class NODE{
       prevState = BEACON;
       state = Re_Be_ACK;
       re_be_end = t_count + BEACON_TIME + CW * TIMESLOT + SIFS;
+       if(id == 0){
+	 cout << "Beacon end\t" << t_count << endl;
+      }
     }
     tx_time+=TCOUNT;
   }
@@ -123,7 +129,10 @@ class NODE{
       ca_time -= TCOUNT;
       return;
     }
-    switch (state){
+    if(id == 0){
+      cout << "Csma end\t" << t_count << endl;
+    }
+    switch (prevState){
       case SLEEP:
 	CsmaCaToBeacon(t_count);
 	break;
@@ -170,8 +179,7 @@ class NODE{
   /*------------------Mode移行処理-----------------------------*/
   void CsmaCaToTransmit(double t_count){
     next_mode = TRANSMIT;
-    next_state = TRANSMIT;
-    
+    next_state = TRANSMIT;    
     txEnd = t_count + (double)(PACKETSIZE / DATARATE);
     transCount++;
   }

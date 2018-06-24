@@ -24,6 +24,7 @@ using namespace std;;
 int main(){
   int i, j;
   int nowround;
+  double cnt = 0.1;
   double temp;
   double p_sleep;
   double t_count;  
@@ -50,6 +51,9 @@ int main(){
       
       //観測開始
       while(t_count < OBSERVE){
+
+	//printProcess
+	operate->printNodeProcess(t_count);
 	
 	//Nodeの状態を更新
 	operate->updateNodes(calc);
@@ -58,12 +62,18 @@ int main(){
 	operate->processNodes(t_count, calc);
 
 	//車両受信処理
-	operate->carReceiveProcess(calc, t_count);			
+	operate->carReceiveProcess(calc, t_count);
+
+	cout << (double)((t_count / OBSERVE) * 100) << endl;
+	if(abs(((double)(t_count / OBSERVE) * 100) - cnt) < 0){
+	  cout << ((t_count / OBSERVE) * 100) << endl;
+	  cnt+=0.1;
+	}
 	
 	t_count+=TCOUNT;
       }
       //結果print
-      operate->printFunc();
+      operate->printRecAndTransPacket();
       delete operate;
       delete calc;
     }

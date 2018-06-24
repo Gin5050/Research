@@ -83,12 +83,16 @@ class Operater{
     }
   }
 
-  void printFunc(){
+  void printRecAndTransPacket(){
     Print::printRecAndTransPacket(n_data, car, N);
   }
 
-  void testFunc(){
+  void printNodeProcess(double t_count){
+    Print::printNodeProcess(n_data, N, t_count);
+  }
 
+  void testFunc(){
+    
   }
 
   int getNodeNum(){
