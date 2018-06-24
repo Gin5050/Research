@@ -68,11 +68,3 @@ random_device rnd;     // 非決定的な乱数生成器を生成
 mt19937 mt(rnd());     //  メルセンヌ・ツイスタの32ビット版、引数は初期シード値
 uniform_real_distribution<> randuni(0.0, 1.0);   // [0, 1] 範囲の一様乱数
 
-class NODE;
-class Calculator;
-class Operater;
-class SurportCalc;
-class CalcUtile;
-class Channel;
-class MovingSink;
-class Print;

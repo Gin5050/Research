@@ -13,18 +13,11 @@
 using namespace std;;
 
 #include "define.h"
-// #include "system.h"
-// #include "channel.h"
-//#include "degree_define.h"
-//#include "awgn.h"
-
-//void Initialaize_nodes(NODE *n_data, int N);
-//void Process_node(NODE *n_data, int N, double t_count, double p_sleep, list<int> &Beacon_node, list<int> &ACK_node, list<int> &Trans_node, list<int> &All_trans);
-//void CSMA_CA(NODE *n_data, int N, int num, double t_count, list<int> &Beacon_node, list<int> &All_trans);
-//void Re_Be_func(NODE *n_data, double t_count, int num, int N, list<int> &Beacon_node, list<int> &All_trans);
-//int MinBack(NODE *n_data, int num, int mode, int N, list<int> &Beacon_node);
-//double SINR(NODE *n_data, double t_count, int num, int min_node, int mode, list<int> &All_trans);
-//void DBPSK(NODE *n_data, double sinr, int num, int temp);
+#include "Channel.hpp"
+#include "Node.hpp"
+#include "CalcUtil.hpp"
+#include "Calculator.hpp"
+#include "Operator.hpp"
 
 int main(){
   int i, j;
