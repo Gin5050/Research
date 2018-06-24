@@ -18,8 +18,7 @@ int main(){
   double temp;
   double p_sleep;
   double t_count;  
-  Operater *operate;
-  MovingSink *car;
+  Operater *operate;  
   Calculator *calc;
   vector<double> PPP_CDF(TEMP_NUM);
 
@@ -40,12 +39,12 @@ int main(){
 
       //計算用オブジェクト生成
       calc = new Calculator();
-
-      //受信車両オブジェクト生成
-      car = new MovingSink();
       
       //Nodesを初期化
       operate->initialaizeNodes();
+
+      //車両を初期化
+      operate->initialazeCar();
       
       t_count = 0;
       
@@ -59,14 +58,13 @@ int main(){
 	operate->processNodes(t_count, calc);
 
 	//車両受信処理
-	car->receiveProcess(calc, n_data);
+	operate->carReceiveProcess(calc, t_count);
 		
 	//operate->printNodesMode(t_count);
 	t_count+=TCOUNT;
       }
-      delete operat;
+      delete operate;
       delete calc;
-      delete car;
     }
   }
   return 0;
