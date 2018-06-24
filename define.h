@@ -89,6 +89,7 @@ class SurportCalc;
 class CalcUtile;
 class Channel;
 class MovingSink;
+class Print;
 
 class Channel{
 public:
@@ -733,16 +734,12 @@ class Operater{
     }
   }
 
-  int getNodeNum(){
-    return N;
-  }
-  
-  NODE& getNodes(){
-    return n_data;
+  void printFunc(){
+    Print::printRecAndTransPacket(n_data, car, N);
   }
 
-  MovingSink& getCar(){
-    return car;
+  int getNodeNum(){
+    return N;
   }
   
   ~Operater(){};
