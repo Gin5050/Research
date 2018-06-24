@@ -25,7 +25,7 @@ class Calculator{
 	distance = CalcUtile::NodesDistance(n_data[id].x, n_data[id].y, n_data[*it].x, n_data[*it].y);
 	channel_coeff = Channel::rayleigh();
 	CSLevel = Channel::pathLoss(distance, PATHLOSS_num) + abs(channel_coeff) * abs(channel_coeff);
-	if(CSLevel > CA_dBm){
+	if(CSLevel > CA_dBm){	  
 	  break; //CAレベルを超えていれば
 	}
       }

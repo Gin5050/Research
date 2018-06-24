@@ -9,6 +9,7 @@ class NODE{
   int mode;
   int next_mode;
   int next_state;
+  int prevState;
   int rec_time;
   int connect;
   int rec_cnt;
@@ -36,6 +37,7 @@ class NODE{
     id = -1;
     state = FALSE;
     next_state = FALSE;
+    prevState = FALSE;
     mode = SLEEP;
     next_mode = FALSE;
     rec_time = 0;
@@ -96,7 +98,8 @@ class NODE{
 	return;
       }      
       next_mode = CSMA;
-      next_state = SLEEP;
+      next_state = CSMA;
+      prevState = SLEEP;
       ca_time = SIFS + TIMESLOT * randCW(mt);	                      
     }
   }
@@ -104,6 +107,7 @@ class NODE{
   void beaconProcess(double t_count){
     if(abs(be_end - t_count) < TCOUNT){
       next_mode = Re_Be_ACK;
+      prevState = BEACON;
       state = Re_Be_ACK;
       re_be_end = t_count + BEACON_TIME + CW * TIMESLOT + SIFS;
     }
@@ -115,7 +119,7 @@ class NODE{
     if(flag == FALSE){
       return;
     }
-    if(ca_time > 0){
+    if(ca_time > TCOUNT){
       ca_time -= TCOUNT;
       return;
     }
@@ -134,6 +138,7 @@ class NODE{
     if(abs(txEnd - t_count) < TCOUNT){
       next_mode = SLEEP;
       next_state = SLEEP;
+      prevState = TRANSMIT;
       activetime = Sint + t_count;
     }
     tx_time+=TCOUNT;
@@ -145,8 +150,11 @@ class NODE{
     rx_time += TCOUNT;
     if(abs(re_be_end - t_count) < TCOUNT){
       next_mode = CSMA;
-      next_state = Re_Be_ACK;
+      next_state = CSMA;
+      prevState = Re_Be_ACK;
       ca_time = SIFS + TIMESLOT * randCW(mt);
+      rec_time = 0;
+      cout << id << endl;
     }
     /*受信処理*/
     if(minNode == EMPTY){
@@ -163,6 +171,7 @@ class NODE{
   void CsmaCaToTransmit(double t_count){
     next_mode = TRANSMIT;
     next_state = TRANSMIT;
+    
     txEnd = t_count + (double)(PACKETSIZE / DATARATE);
     transCount++;
   }

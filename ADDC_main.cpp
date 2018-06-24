@@ -12,11 +12,13 @@
 
 using namespace std;;
 
-#include "define.h"
+#include "Definition.hpp"
 #include "Channel.hpp"
 #include "Node.hpp"
 #include "CalcUtil.hpp"
 #include "Calculator.hpp"
+#include "MovingSink.hpp"
+#include "Print.hpp"
 #include "Operator.hpp"
 
 int main(){
@@ -29,15 +31,6 @@ int main(){
   Calculator *calc;
   vector<double> PPP_CDF(TEMP_NUM);
 
-  //ToDo
-  //define.h内のCalculatorにおいてCarrierSense関数を実装中
-  //define.hのOperatorクラス内のCSMA_CA関数を実装中
-  //Calculatorクラスの処理の細分化に悩み中
-  //CalcUtileクラスを作成．その中にSINRを計算する関数を記述中
-  //channelクラスを生成
-  //Re_Be_ACK処理のためにDBPSKを含む信号受信処理を記述中
-  //車両オブジェクトの作成を行う
-  
   for(p_sleep = 0.5; p_sleep < 0.6; p_sleep += 0.1){    
     for(nowround = 0; nowround < REPEATNUM; nowround++){
       
@@ -65,11 +58,12 @@ int main(){
 	operate->processNodes(t_count, calc);
 
 	//車両受信処理
-	operate->carReceiveProcess(calc, t_count);
-		
-	//operate->printNodesMode(t_count);
+	operate->carReceiveProcess(calc, t_count);			
+	
 	t_count+=TCOUNT;
       }
+      //結果print
+      operate->printFunc();
       delete operate;
       delete calc;
     }

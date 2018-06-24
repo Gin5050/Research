@@ -1,7 +1,7 @@
 /*2018　4/15作成　*/
 /*SensorパラメータRev 1.0 10/14Copyright © 2014 by Silicon LaboratoriesSi4468/7Si4468/7HIGH-PERFORMANCE, LOW-CURRENT TRANSCEIVER*/
 
-#define OBSERVE 10 //second
+#define OBSERVE 5 //second
 #define REPEATNUM 1			//繰り返し回数
 #define TCOUNT 0.000001
 #define PACKETSIZE 500				//パケットの構成ビット
@@ -20,7 +20,7 @@
 #define SN 100					//Receiverスタート地点ノード番号
 #define EN (X_RANGE - SN) 			//Receiver受信終了地点
 #define WAVENUM 15
-#define Sint (3.0)				//スリープ間隔（s）
+#define Sint (2.0)				//スリープ間隔（s）
 #define PATHLOSS_num 2.5
 #define V_km 36					//車速36km
 #define V_m ((double)(V_km * 1000 / 3600))	//車両速度 m/s
