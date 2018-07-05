@@ -107,8 +107,9 @@ class NODE{
     }
   }
 
-  void beaconProcess(double t_count){
+  void beaconProcess(double t_count, ModeMemory *modeMemo){
     if(abs(be_end - t_count) < TCOUNT){
+      modeMemo.deleteBeacon(id);
       next_mode = Re_Be_ACK;
       prevState = BEACON;
       state = Re_Be_ACK;
@@ -120,7 +121,7 @@ class NODE{
     tx_time+=TCOUNT;
   }
 
-  void csmaCaProcess(double t_count, int flag){
+  void csmaCaProcess(double t_count, int flag, ModeMemory *modeMemo){
     csma_time += TCOUNT; 
     if(flag == FALSE){
       return;
@@ -134,11 +135,11 @@ class NODE{
     }
     switch (prevState){
       case SLEEP:
-	CsmaCaToBeacon(t_count);
+	CsmaCaToBeacon(t_count, modeMemo);
 	break;
 
       case Re_Be_ACK:
-	CsmaCaToTransmit(t_count);
+	CsmaCaToTransmit(t_count, modeMemo);
 	break;
     }         
   }
@@ -176,17 +177,19 @@ class NODE{
   
   /*----------------------------------------------------------*/
   /*------------------Mode移行処理-----------------------------*/
-  void CsmaCaToTransmit(double t_count){
+  void CsmaCaToTransmit(double t_count, ModeMemory *modeMemo){
     next_mode = TRANSMIT;
     next_state = TRANSMIT;    
     txEnd = t_count + (double)(PACKETSIZE / DATARATE);
     transCount++;
+    modeMemo.addTrans(id);
   }
 
-  void CsmaCaToBeacon(double t_count){
+  void CsmaCaToBeacon(double t_count, ModeMemory *modeMemo){
     next_mode = BEACON;
     next_state = BEACON;
-    be_end = t_count + BEACON_TIME; //Beacon送信時間は1ms   
+    be_end = t_count + BEACON_TIME; //Beacon送信時間は1ms
+    modeMemo.addBeacon(id);
   }
   /*----------------------------------------------------------*/
    

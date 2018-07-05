@@ -29,7 +29,7 @@ class MovingSink{
     y = Y_RANGE / 2.0;    
   }
 
-  void receiveProcess(Calculator *calc, NODE *n_data, double t_count){
+  void receiveProcess(Calculator *calc, NODE *n_data, double t_count, ModeMemory *modeMemo){
     int minNode = EMPTY;
     double sinr = 0;
     double fadingDb = 0;
@@ -37,7 +37,7 @@ class MovingSink{
     if(calc->searchTx(x, y, n_data) == EMPTY){
       return;
     }
-    minNode = CalcUtile::MinNode(x, y, calc->getTransNodes(), n_data);
+    minNode = CalcUtile::MinNode(x, y, modeMemo->getTransNodes(), n_data);
     sinr = calc->calcSinr(n_data, x, y, minNode);
     fadingDb = 10 * log10(abs(n_data[minNode].jakes(t_count)) * abs(n_data[minNode].jakes(t_count)));
     if(recCount == 0){

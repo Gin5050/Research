@@ -14,6 +14,7 @@ using namespace std;;
 
 #include "Definition.hpp"
 #include "Channel.hpp"
+#include "ModeMemory.hpp"
 #include "Node.hpp"
 #include "CalcUtil.hpp"
 #include "Calculator.hpp"
@@ -30,6 +31,7 @@ int main(){
   double t_count;  
   Operater *operate;  
   Calculator *calc;
+  ModeMemory *modeMemo;
   vector<double> PPP_CDF(TEMP_NUM);
 
   for(p_sleep = 0.5; p_sleep < 0.6; p_sleep += 0.1){    
@@ -40,6 +42,9 @@ int main(){
 
       //計算用オブジェクト生成
       calc = new Calculator();
+
+      //Nodeの状態記憶用オブジェクト生成
+      modeMemo = new ModeMemory();
       
       //Nodesを初期化
       operate->initialaizeNodes();
@@ -59,10 +64,10 @@ int main(){
 	operate->updateNodes(calc);
 	
 	//各Nodesの処理分岐
-	operate->processNodes(t_count, calc);
+	operate->processNodes(t_count, calc, modeMemo);
 
 	//車両受信処理
-	operate->carReceiveProcess(calc, t_count);
+	operate->carReceiveProcess(calc, t_count, modeMemo);
 	
 	if(abs(((double)(t_count / OBSERVE) * 100) - cnt) < 0.1){
 	  cout << ((t_count / OBSERVE) * 100) << endl;

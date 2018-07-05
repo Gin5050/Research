@@ -12,14 +12,14 @@ class Calculator{
   Calculator(){     
   }
 
-  int CarrierSense(NODE *n_data,  int id){
+  int CarrierSense(NODE *n_data,  int id, ModeMemory *modeMemo){
     list<int> ::iterator it;
     double distance = 0;
     double CSLevel;
     complex<double> channel_coeff;
       
     /*他端末からの送信信号の受信電力を測定*/
-    it = All_trans.begin();
+    it = modeMemo->getTransNodes().begin();
     while(it != All_trans.end()){
       if(id != *it){
 	distance = CalcUtile::NodesDistance(n_data[id].x, n_data[id].y, n_data[*it].x, n_data[*it].y);
@@ -105,14 +105,6 @@ class Calculator{
   void addReBeAck(int id){
     ACK_node.push_back(id);
     All_trans.push_back(id);
-  }
-
-  list<int> getTransNodes(){
-    return Trans_node;
-  }
-
-  list<int> getBeaconNodes(){
-    return Beacon_node;
   }
 };
 
