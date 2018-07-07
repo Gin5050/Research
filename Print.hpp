@@ -32,22 +32,28 @@ class Print{
     //cout << t_count << endl;
     for(int i = 0; i < 1; i++){
       if((abs(n_data[i].activetime - t_count) < TCOUNT)){
-	cout << "ActiveTime = " << n_data[i].activetime << endl;
+	cout << "id =" << n_data[i].id << "ActiveTime = " << n_data[i].activetime << endl;
       }
       if(n_data[i].ca_time < TCOUNT && n_data[i].prevState == CSMA){
-	cout << "CSMA\t" << "ca_tome = " << n_data[i].ca_time << "\tmode = " << n_data[i].mode << "\tnext_mode = " << n_data[i].next_mode << endl;
+	cout << "CSMA\t" << "id =" << n_data[i].id << "ca_tome = " << n_data[i].ca_time << "\tmode = " << n_data[i].mode << "\tnext_mode = " << n_data[i].next_mode << endl;
       }
       if(abs(n_data[i].be_end - t_count) < TCOUNT){
-	cout << "BEACON\t" << "Time = " << t_count << "\tmode = " << n_data[i].mode << "\tnext_mode = " << n_data[i].next_mode << endl;
+	cout << "BEACON\t" << "id =" << n_data[i].id << "Time = " << t_count << "\tmode = " << n_data[i].mode << "\tnext_mode = " << n_data[i].next_mode << endl;
       }
       if(abs(n_data[i].re_be_end - t_count) < TCOUNT){
-	cout << "Re_be_ACK\t" << "Time = " << t_count << "\tmode = " << n_data[i].mode << "\tnext_mode = " << n_data[i].next_mode << endl;
+	cout << "Re_be_ACK\t" << "id =" << n_data[i].id << "Time = " << t_count << "\tmode = " << n_data[i].mode << "\tnext_mode = " << n_data[i].next_mode << endl;
       }
       if(n_data[i].next_mode != n_data[i].mode){
-	cout << "Mode Change\t" << "mode = " << n_data[i].mode << "\tnext_mode = " << n_data[i].next_mode << "\tprevState = " << n_data[i].prevState << endl;
+	cout << "Mode Change\t" << "id =" << n_data[i].id << "mode = " << n_data[i].mode << "\tnext_mode = " << n_data[i].next_mode << "\tprevState = " << n_data[i].prevState << endl;
       }
     }
-    
+  }
+
+  static void printListSize(ModeMemory *modeMemo){
+    cout << "All_trans = " << modeMemo->All_trans.size() << endl;
+    cout << "Trans = " << modeMemo->Trans_node.size() << endl;
+    cout << "Beacon = " << modeMemo->Beacon_node.size() << endl;
+    cout << "ACK = " << modeMemo->ACK_node.size() << endl;
   }
 };
 

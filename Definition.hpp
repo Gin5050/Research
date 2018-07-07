@@ -40,7 +40,7 @@
 #define RECEIVE 5
 #define BEACON 6
 #define SENDER 7
-#define Re_ACK 8						//ack待ち
+#define ACK 8						//ack待ち
 #define SENDER_ACK 9							//beaconに対するack
 #define IDLE 10
 #define Re_Be_ACK 13

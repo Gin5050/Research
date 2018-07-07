@@ -21,19 +21,21 @@ class ModeMemory{
     All_trans.push_back(id);
   }
 
-  void addReBeAck(int id){
+  void addAck(int id){
     ACK_node.push_back(id);
     All_trans.push_back(id);
   }
 
   void deleteBeacon(int id){
-    list<int>::iterator it = Beacon_node.begin();
+    list<int>::iterator it = Beacon_node.begin();  
     while(it != Beacon_node.end()){
       if(*it == id){
 	Beacon_node.erase(it);
 	break;
       }
+      ++it;
     }
+    deleteAllTrans(id);
   }
 
   void deleteTrans(int id){
@@ -43,7 +45,9 @@ class ModeMemory{
 	Trans_node.erase(it);
 	break;
       }
+      ++it;
     }
+    deleteAllTrans(id);
   }
 
   void deleteACKnodes(int id){
@@ -53,15 +57,20 @@ class ModeMemory{
 	ACK_node.erase(it);
 	break;
       }
+      ++it;
     }
+    deleteAllTrans(id);
   }
 
-  list<int> getTransNodes(){
-    return Trans_node;
-  }
-
-  list<int> getBeaconNodes(){
-    return Beacon_node;
+  void deleteAllTrans(int id){
+    list<int>::iterator it = All_trans.begin();
+    while(it != All_trans.end()){
+      if(*it == id){
+	All_trans.erase(it);
+	break;
+      }
+      ++it;
+    }    
   }
 };
 #endif

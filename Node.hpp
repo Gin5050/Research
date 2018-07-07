@@ -97,9 +97,6 @@ class NODE{
 	activetime = t_count + Sint;
 	return;
       }
-      if(id == 0){
-	cout << "SLEEP end\t" << t_count << endl;
-      }
       next_mode = CSMA;
       next_state = CSMA;
       prevState = SLEEP;
@@ -108,15 +105,15 @@ class NODE{
   }
 
   void beaconProcess(double t_count, ModeMemory *modeMemo){
-    if(abs(be_end - t_count) < TCOUNT){
-      modeMemo.deleteBeacon(id);
+    if(abs(be_end - t_count) < TCOUNT){   
+      modeMemo->deleteBeacon(id);
       next_mode = Re_Be_ACK;
       prevState = BEACON;
       state = Re_Be_ACK;
       re_be_end = t_count + BEACON_TIME + CW * TIMESLOT + SIFS;
-       if(id == 0){
-	 cout << "Beacon end\t" << t_count << endl;
-      }
+      // if(id == 0){
+      // 	 cout << "Beacon end\t" << t_count << endl;
+      // }
     }
     tx_time+=TCOUNT;
   }
@@ -130,9 +127,6 @@ class NODE{
       ca_time -= TCOUNT;
       return;
     }
-    if(id == 0){
-      cout << "Csma end\t" << t_count << endl;
-    }
     switch (prevState){
       case SLEEP:
 	CsmaCaToBeacon(t_count, modeMemo);
@@ -144,12 +138,13 @@ class NODE{
     }         
   }
 
-  void txProcess(double t_count){
+  void txProcess(double t_count, ModeMemory *modeMemo){
     if(abs(txEnd - t_count) < TCOUNT){
       next_mode = SLEEP;
       next_state = SLEEP;
       prevState = TRANSMIT;
       activetime = Sint + t_count;
+      modeMemo->deleteTrans(id);
     }
     tx_time+=TCOUNT;
   }
@@ -172,6 +167,7 @@ class NODE{
     DBPSK(sinr, minNode);
     if(rec_cnt == PACKETSIZE){
       /*Senderからの信号受信処理*/
+      return;
     }    
   }
   
@@ -182,14 +178,14 @@ class NODE{
     next_state = TRANSMIT;    
     txEnd = t_count + (double)(PACKETSIZE / DATARATE);
     transCount++;
-    modeMemo.addTrans(id);
+    //modeMemo->addTrans(id);
   }
 
   void CsmaCaToBeacon(double t_count, ModeMemory *modeMemo){
     next_mode = BEACON;
     next_state = BEACON;
     be_end = t_count + BEACON_TIME; //Beacon送信時間は1ms
-    modeMemo.addBeacon(id);
+    //modeMemo->addBeacon(id);
   }
   /*----------------------------------------------------------*/
    

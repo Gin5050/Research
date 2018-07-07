@@ -34,11 +34,11 @@ class MovingSink{
     double sinr = 0;
     double fadingDb = 0;
     
-    if(calc->searchTx(x, y, n_data) == EMPTY){
+    if(calc->searchTx(x, y, n_data, modeMemo) == EMPTY){
       return;
     }
-    minNode = CalcUtile::MinNode(x, y, modeMemo->getTransNodes(), n_data);
-    sinr = calc->calcSinr(n_data, x, y, minNode);
+    minNode = CalcUtile::MinNode(x, y, modeMemo->Trans_node, n_data);
+    sinr = calc->calcSinr(n_data, x, y, minNode, modeMemo);
     fadingDb = 10 * log10(abs(n_data[minNode].jakes(t_count)) * abs(n_data[minNode].jakes(t_count)));
     if(recCount == 0){
       connectedNode = minNode;

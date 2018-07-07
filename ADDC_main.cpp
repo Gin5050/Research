@@ -25,7 +25,7 @@ using namespace std;;
 int main(){
   int i, j;
   int nowround;
-  double cnt = 0.1;
+  double cnt = 1.0;
   double temp;
   double p_sleep;
   double t_count;  
@@ -61,7 +61,7 @@ int main(){
 	operate->printNodeProcess(t_count);
 	
 	//Nodeの状態を更新
-	operate->updateNodes(calc);
+	operate->updateNodes(modeMemo);
 	
 	//各Nodesの処理分岐
 	operate->processNodes(t_count, calc, modeMemo);
@@ -69,10 +69,10 @@ int main(){
 	//車両受信処理
 	operate->carReceiveProcess(calc, t_count, modeMemo);
 	
-	if(abs(((double)(t_count / OBSERVE) * 100) - cnt) < 0.1){
-	  cout << ((t_count / OBSERVE) * 100) << endl;
-	  cnt+=0.1;
-	}
+	// if(abs(((double)(t_count / OBSERVE) * 100) - cnt) < 1.0){
+	//   cout << ((t_count / OBSERVE) * 100) << endl;	 
+	//   cnt+=1.0;
+	// }
 	
 	t_count+=TCOUNT;
       }

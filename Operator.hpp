@@ -35,7 +35,7 @@ class Operater{
 	  break;
 
 	case CSMA:
-	  n_data[i].csmaCaProcess(t_count, calc->CarrierSense(n_data, i, modeMemo)，modeMemo);	  
+	  n_data[i].csmaCaProcess(t_count, calc->CarrierSense(n_data, i, modeMemo), modeMemo);
 	  break;
 
 	case BEACON:
@@ -43,9 +43,9 @@ class Operater{
 	  break;
 
 	case Re_Be_ACK:
-	  minNode = calc->searchAck(n_data[i].x, n_data[i].y, n_data);
-	  sinr = calc->calcSinr(n_data, n_data[i].x, n_data[i].y, minNode);
-	  n_data[i].Re_Be_ACK_Process(t_count, n_data, minNode, sinr, modeMemo);
+	  minNode = calc->searchAck(n_data[i].x, n_data[i].y, n_data, modeMemo);
+	  sinr = calc->calcSinr(n_data, n_data[i].x, n_data[i].y, minNode, modeMemo);
+	  n_data[i].Re_Be_ACK_Process(t_count, n_data, minNode, sinr);
 	  break;
 
 	case TRANSMIT:
@@ -66,18 +66,20 @@ class Operater{
 
   void updateNodes(ModeMemory *modeMemo){
     for(int i = 0; i < N; i++){
-      switch (n_data[i].next_mode){
-	case BEACON:
-	  modeMemo->addBeacon(i);
-	  break;
+      if(n_data[i].next_mode != n_data[i].mode){
+	switch (n_data[i].next_mode){
+	  case BEACON:
+	    modeMemo->addBeacon(i);
+	    break;
 	  
-	case TRANSMIT:
-	  modeMemo->addTrans(i);
-	  break;
+	  case TRANSMIT:
+	    modeMemo->addTrans(i);
+	    break;
 
-	case Re_Be_ACK:
-	  modeMemo->addReBeAck(i);
-	  break;
+	  case ACK:
+	    modeMemo->addAck(i);
+	    break;
+	}
       }
       n_data[i].mode = n_data[i].next_mode;
     }
@@ -91,6 +93,9 @@ class Operater{
     Print::printNodeProcess(n_data, N, t_count);
   }
 
+  void printListSize(ModeMemory *modeMemo){
+    Print::printListSize(modeMemo);
+  }
   void testFunc(){
     
   }
