@@ -46,12 +46,15 @@ class MovingSink{
     }
     recCount++;
     recBits += DBPSK(sinr, n_data[minNode].channel_num, minNode);
-    if(connectedNode == minNode && recBits == PACKETSIZE){
+    
+    if(connectedNode == minNode && recBits == PACKETSIZE && recCount == BITS_COUNT){
+      cout << minNode << "\t" << recCount <<  "\tsinr = " << sinr << "\t" <<  recBits << endl;
       recPackets++;     
       initialazeRecProcess();
       return;
     }
-    if(recCount == PACKETSIZE / DATARATE){ //あとで確認
+   
+    if(recCount == BITS_COUNT){ //あとで確認     
       initialazeRecProcess();
       return;
     }

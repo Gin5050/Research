@@ -4,6 +4,9 @@
 
 class Print{
  public:
+  static void basicInfo(){
+    
+  }
   static void printNodesMode(NODE *n_data, int N, double t_count){
     for(int i = 0; i < N; i++){
       if((n_data[i].mode != SLEEP) && (n_data[i].mode != Re_Be_ACK)){
@@ -20,6 +23,7 @@ class Print{
 
   static  void printRecAndTransPacket(NODE *n_data, MovingSink *car, int N){
     int cnt = 0;
+    cout << N << endl;
     cout << "RecPacket\t" << car->recPackets << "\t";
     for(int i = 0; i < N; i++ ){
       cnt += n_data[i].transCount;
@@ -32,19 +36,19 @@ class Print{
     //cout << t_count << endl;
     for(int i = 0; i < 1; i++){
       if((abs(n_data[i].activetime - t_count) < TCOUNT)){
-	cout << "id =" << n_data[i].id << "ActiveTime = " << n_data[i].activetime << endl;
+	cout << "id =" << n_data[i].id << "\tActiveTime = " << n_data[i].activetime << endl;
       }
       if(n_data[i].ca_time < TCOUNT && n_data[i].prevState == CSMA){
-	cout << "CSMA\t" << "id =" << n_data[i].id << "ca_tome = " << n_data[i].ca_time << "\tmode = " << n_data[i].mode << "\tnext_mode = " << n_data[i].next_mode << endl;
+	cout << "CSMA\t" << "id =" << n_data[i].id << "\tca_tome = " << n_data[i].ca_time << "\tmode = " << n_data[i].mode << "\tnext_mode = " << n_data[i].next_mode << endl;
       }
       if(abs(n_data[i].be_end - t_count) < TCOUNT){
-	cout << "BEACON\t" << "id =" << n_data[i].id << "Time = " << t_count << "\tmode = " << n_data[i].mode << "\tnext_mode = " << n_data[i].next_mode << endl;
+	cout << "BEACON\t" << "id =" << n_data[i].id << "\tTime = " << t_count << "\tmode = " << n_data[i].mode << "\tnext_mode = " << n_data[i].next_mode << endl;
       }
       if(abs(n_data[i].re_be_end - t_count) < TCOUNT){
-	cout << "Re_be_ACK\t" << "id =" << n_data[i].id << "Time = " << t_count << "\tmode = " << n_data[i].mode << "\tnext_mode = " << n_data[i].next_mode << endl;
+	cout << "Re_be_ACK\t" << "id =" << n_data[i].id << "\tTime = " << t_count << "\tmode = " << n_data[i].mode << "\tnext_mode = " << n_data[i].next_mode << endl;
       }
       if(n_data[i].next_mode != n_data[i].mode){
-	cout << "Mode Change\t" << "id =" << n_data[i].id << "mode = " << n_data[i].mode << "\tnext_mode = " << n_data[i].next_mode << "\tprevState = " << n_data[i].prevState << endl;
+	cout << "Mode Change\t" << "id =" << n_data[i].id << "\tmode = " << n_data[i].mode << "\tnext_mode = " << n_data[i].next_mode << "\tprevState = " << n_data[i].prevState << endl;
       }
     }
   }
