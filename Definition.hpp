@@ -63,7 +63,8 @@ const double NOISEFLORE_dBm = 10 * log10(NOISE);
 const double TIMESLOT = (20 * pow(10, -6));				//CSMA/CA
 const double SIFS = (10 * pow(10, -6));					//CSMA/CA
 const double DATARATE = (250 * pow(10,3));				//データレート250kbps
-const double BITS_COUNT = ((PACKETSIZE / DATARATE) / TCOUNT);
+const int BITS_COUNT = ((PACKETSIZE / DATARATE) / TCOUNT);
+const int BITS_PER_1us = 1.0 / (DATARATE * TCOUNT); 
 
 random_device rnd;     // 非決定的な乱数生成器を生成
 mt19937 mt(rnd());     //  メルセンヌ・ツイスタの32ビット版、引数は初期シード値
