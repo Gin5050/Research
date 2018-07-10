@@ -60,7 +60,7 @@ class Operater{
   }
   
   void carReceiveProcess(Calculator *calc, double t_count, ModeMemory *modeMemo){
-    car->x += (t_count * V_m); 
+    car->x += (TCOUNT * V_m); 
     car->receiveProcess(calc, n_data, t_count, modeMemo);
   }
 

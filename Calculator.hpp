@@ -88,6 +88,34 @@ class Calculator{
 
     return (loss + fading - (10 * log10(interference + NOISE)));
   }
+
+  double calcSinrJakes(NODE *n_data, double x, double y, int minNode, ModeMemory *modeMemo, double t_count){
+    list<int> ::iterator it = modeMemo->All_trans.begin();
+    complex<double> chnlCoeff;
+    double distance = 0;
+    double loss = 0;
+    double fading = 0;
+    double interference = 0;    
+    
+    while(it != modeMemo->All_trans.end()){
+      if(*it != minNode){
+	distance = CalcUtile::NodesDistance(x, y, n_data[*it].x, n_data[*it].y);
+	loss = Channel::pathLoss(distance, PATHLOSS_num);
+	chnlCoeff = n_data[*it].jakes(t_count);
+	fading = 10 * log10(abs(chnlCoeff) * abs(chnlCoeff));
+	interference += (pow(10, (fading + loss) / 10.0));
+      }
+      it++;
+    }
+    distance = CalcUtile::NodesDistance(x, y, n_data[minNode].x, n_data[minNode].y);
+    loss = Channel::pathLoss(distance, PATHLOSS_num);
+    chnlCoeff = n_data[minNode].jakes(t_count);
+    fading = 10 * log10(abs(chnlCoeff) * abs(chnlCoeff));
+
+    // cout << distance << "\t" << x << "\t" << y << "\t" <<  n_data[minNode].x << "\t" <<  n_data[minNode].y << "\t"
+    // 	 << loss << "\t" << 10 * log10(interference + NOISE) << endl;
+    return (loss + fading - (10 * log10(interference + NOISE)));
+  }
 };
 
 #endif

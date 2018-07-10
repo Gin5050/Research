@@ -40,28 +40,26 @@ class MovingSink{
       return;
     }
     minNode = CalcUtile::MinNode(x, y, modeMemo->Trans_node, n_data);
-    sinr = calc->calcSinr(n_data, x, y, minNode, modeMemo);
-    fadingDb = 10 * log10(abs(n_data[minNode].jakes(t_count)) * abs(n_data[minNode].jakes(t_count)));
+    sinr = calc->calcSinrJakes(n_data, x, y, minNode, modeMemo, t_count);
+    
     if(recCount == 0){
       connectedNode = minNode;
       m_prev = CalcUtile::getConsteration(n_data, sinr, minNode, t_count);
     }
     
     recCount++;
-    if(connectedNode == minNode && (recCount % BITS_PER_1us) == 0){
-      //      cout << minNode << "\t" << recCount <<  "\tsinr = " << sinr << "\t" <<  recBits << endl;
+    if(connectedNode == minNode && (recCount % BITS_PER_1us) == 0){     
       recBits += DBPSK(sinr, n_data[minNode].channel_num, minNode);
     }      
     
-    if(recBits == PACKETSIZE && recCount == BITS_COUNT){
-      
+    if(recBits == PACKETSIZE && recCount == BITS_COUNT){      
       recPackets++;     
       initialazeRecProcess();
       return;
     }
    
     if(recCount == BITS_COUNT){ //あとで確認
-      cout << minNode << "\t" << recCount <<  "\tsinr = " << sinr << "\t" <<  recBits << endl;
+      cout << recBits << "\t" << recCount << "\tsinr = " << sinr << endl;
       initialazeRecProcess();
       return;
     }
@@ -77,11 +75,12 @@ class MovingSink{
     m_temp = m_temp * channelNum;
     m_temp += complex<double>(Channel::awgnQ(sinr), Channel::awgnI(sinr));     
     p_d = abs(arg(m_prev) - arg(m_temp));
+    cout << m_temp.real() << "\t" << m_temp.imag() << endl;
     m_prev = m_temp;
     if(cos(p_d) < 0){ //1bitでも誤った場合は終了
-      return 1;
+      return 0;
     }
-    return 0;
+    return 1;
   }
 
   void initialazeRecProcess(){
