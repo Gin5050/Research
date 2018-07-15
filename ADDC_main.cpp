@@ -34,6 +34,8 @@ int main(){
   ModeMemory *modeMemo;
   vector<double> PPP_CDF(TEMP_NUM);
 
+  Print::printBasicInfo();
+
   for(p_sleep = 0.5; p_sleep < 0.6; p_sleep += 0.1){    
     for(nowround = 0; nowround < REPEATNUM; nowround++){
       

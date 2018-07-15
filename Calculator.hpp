@@ -110,11 +110,12 @@ class Calculator{
     distance = CalcUtile::NodesDistance(x, y, n_data[minNode].x, n_data[minNode].y);
     loss = Channel::pathLoss(distance, PATHLOSS_num);
     chnlCoeff = n_data[minNode].jakes(t_count);
-    fading = 10 * log10(abs(chnlCoeff) * abs(chnlCoeff));
+    //fading = 10 * log10(abs(chnlCoeff) * abs(chnlCoeff));
 
     // cout << distance << "\t" << x << "\t" << y << "\t" <<  n_data[minNode].x << "\t" <<  n_data[minNode].y << "\t"
     // 	 << loss << "\t" << 10 * log10(interference + NOISE) << endl;
-    return (loss + fading - (10 * log10(interference + NOISE)));
+    //return (loss + fading - (10 * log10(interference + NOISE)));
+    return (loss - (10 * log10(interference + NOISE)));
   }
 };
 

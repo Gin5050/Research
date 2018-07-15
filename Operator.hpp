@@ -100,6 +100,10 @@ class Operater{
     
   }
 
+  void printBasicInfo(){
+    Print::printBasicInfo();
+  }
+
   int getNodeNum(){
     return N;
   }

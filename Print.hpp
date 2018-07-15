@@ -4,15 +4,21 @@
 
 class Print{
  public:
-  static void basicInfo(){
-    
+  static void printBasicInfo(){
+    cout << "Obserbation time = " << OBSERVE << "\tSint = " << Sint << endl;
   }
+  
   static void printNodesMode(NODE *n_data, int N, double t_count){
     for(int i = 0; i < N; i++){
       if((n_data[i].mode != SLEEP) && (n_data[i].mode != Re_Be_ACK)){
 	cout << t_count << "\t" << i << "\t" << n_data[i].mode << endl;
       }
     }
+  }
+
+  static void printInspectDBPSK(){
+    double avbSinr = 0;
+    
   }
 
   static void printNodesActiveTime(NODE *n_data, int N){
