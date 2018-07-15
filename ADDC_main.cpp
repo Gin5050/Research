@@ -67,8 +67,6 @@ int main(){
 
 	//車両受信処理
 	operate->carReceiveProcess(calc, t_count, modeMemo);
-
-	//operate->printTransNodes(t_count, modeMemo);
 	
 	//Nodeの状態を更新
 	operate->updateNodes(modeMemo);

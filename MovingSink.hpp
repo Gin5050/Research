@@ -35,11 +35,13 @@ class MovingSink{
     int minNode = EMPTY;
     double sinr = 0;
     double fadingDb = 0;
-    
+
+    //送信端末がない場合終了
     if(calc->searchTx(x, y, n_data, modeMemo) == EMPTY){
       initialazeRecProcess();
       return;
     }
+    //送信端末内でもっとも距離が近いノード選択
     minNode = CalcUtile::MinNode(x, y, modeMemo->Trans_node, n_data);    
     
     if(recCount == 0 && connectedNode == EMPTY){
