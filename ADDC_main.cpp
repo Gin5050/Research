@@ -30,7 +30,6 @@ int main(){
   double p_sleep;
   double t_count;  
   Operater *operate;  
-  Calculator *calc;
   ModeMemory *modeMemo;
   vector<double> PPP_CDF(TEMP_NUM);
 
@@ -41,9 +40,6 @@ int main(){
       
       //操作用オブジェクト生成
       operate = new Operater((CalcUtile::PPP(PPP_CDF, randuni(mt))), p_sleep);
-
-      //計算用オブジェクト生成
-      calc = new Calculator();
 
       //Nodeの状態記憶用オブジェクト生成
       modeMemo = new ModeMemory();
@@ -58,15 +54,12 @@ int main(){
       
       //観測開始
       while(t_count < OBSERVE){
-
-	//printProcess
-	//operate->printNodeProcess(t_count);	
 	
 	//各Nodesの処理分岐
-	operate->processNodes(t_count, calc, modeMemo);	
+	operate->processNodes(t_count, modeMemo);	
 
 	//車両受信処理
-	operate->carReceiveProcess(calc, t_count, modeMemo);
+	operate->carReceiveProcess(t_count, modeMemo);
 	
 	//Nodeの状態を更新
 	operate->updateNodes(modeMemo);
@@ -82,7 +75,7 @@ int main(){
       Print::printInspectDBPSK();
       operate->printRecAndTransPacket();
       delete operate;
-      delete calc;
+      delete modeMemo;
     }
   }
   return 0;
@@ -337,28 +330,3 @@ void Process_node(NODE *n_data, int N, double t_count, double p_sleep, list<int>
 //   }
 //   n_data[num].rec_cnt += j;
 // }
-
-int MinBack(NODE *n_data, int num, int mode, int N, list<int> &nodes){
-  int i;
-  int temp = -1;
-  double distance = 0;
-  double min = 1000000;
-  list<int> ::iterator it;
-
-  it = nodes.begin();
-  while(it != nodes.end()){
-    if(*it != num){
-      if(n_data[*it].mode == mode){
-	distance = sqrt(pow(n_data[num].x - n_data[*it].x, 2) + pow(n_data[num].y - n_data[*it].y, 2));
-	if(min > distance){
-	  min = distance;
-	  temp = i;
-	}
-      }
-    }
-    ++it;
-  }    
-  return temp;
-}
-  
-

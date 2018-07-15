@@ -26,7 +26,7 @@ class Operater{
     }
   }
 
-  void processNodes(double t_count, Calculator *calc, ModeMemory *modeMemo){
+  void processNodes(double t_count, ModeMemory *modeMemo){
     
     for(int i = 0; i < N; i++){
       switch (n_data[i].mode){
@@ -35,7 +35,7 @@ class Operater{
 	  break;
 
 	case CSMA:
-	  n_data[i].csmaCaProcess(t_count, calc->CarrierSense(n_data, i, modeMemo), modeMemo);
+	  n_data[i].csmaCaProcess(t_count, CalcUtile::CarrierSense(n_data, i, modeMemo), modeMemo);
 	  break;
 
 	case BEACON:
@@ -43,8 +43,8 @@ class Operater{
 	  break;
 
 	case Re_Be_ACK:
-	  minNode = calc->searchAck(n_data[i].x, n_data[i].y, n_data, modeMemo);
-	  sinr = calc->calcSinr(n_data, n_data[i].x, n_data[i].y, minNode, modeMemo);
+	  minNode = CalcUtile::searchAck(n_data[i].x, n_data[i].y, n_data, modeMemo);
+	  sinr = CalcUtile::calcSinr(n_data, n_data[i].x, n_data[i].y, minNode, modeMemo);
 	  n_data[i].Re_Be_ACK_Process(t_count, n_data, minNode, sinr);
 	  break;
 
@@ -59,9 +59,9 @@ class Operater{
     car->initialization();
   }
   
-  void carReceiveProcess(Calculator *calc, double t_count, ModeMemory *modeMemo){
+  void carReceiveProcess(double t_count, ModeMemory *modeMemo){
     car->x += (TCOUNT * V_m); 
-    car->receiveProcess(calc, n_data, t_count, modeMemo);
+    car->receiveProcess(n_data, t_count, modeMemo);
   }
 
   void updateNodes(ModeMemory *modeMemo){
