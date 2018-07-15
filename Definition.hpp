@@ -15,15 +15,15 @@
 #define PoisonSIZE 2000
 #define X_RANGE 1200 //range of x axis (m)
 #define Y_RANGE 10 //range of y acis (m)
-#define DENSITY 0.1 //1m^2あたりの平均の端末数（密度）
+#define DENSITY 0.05 //1m^2あたりの平均の端末数（密度）
 #define Lambda (X_RANGE * Y_RANGE * DENSITY)
 #define SN 100					//Receiverスタート地点ノード番号
 #define EN (X_RANGE - SN) 			//Receiver受信終了地点
 #define WAVENUM 15
-#define Sint (5.0)				//スリープ間隔（s）
+#define Sint (10.0)				//スリープ間隔（s）
 #define PATHLOSS_num 2.5
 #define V_km 36					//車速36km
-#define V_m ((double)(V_km * 1000 / 3600))	//車両速度 m/s
+#define V_m ((double)(V_km * 1000 / 3600.0))	//車両速度 m/s
 #define POWER 1.0				//送信電力10dBm
 #define CA_dBm -75				//キャリアセンス閾値 IEEE 802.15.4
 #define CW 15					//コンテイションウィンド
@@ -65,6 +65,9 @@ const double SIFS = (10 * pow(10, -6));					//CSMA/CA
 const double DATARATE = (250 * pow(10,3));				//データレート250kbps
 const int BITS_COUNT = ((PACKETSIZE / DATARATE) / TCOUNT);
 const int BITS_PER_1us = 1.0 / (DATARATE * TCOUNT); 
+
+vector<double> avbSinr;
+double ber = 0;
 
 random_device rnd;     // 非決定的な乱数生成器を生成
 mt19937 mt(rnd());     //  メルセンヌ・ツイスタの32ビット版、引数は初期シード値

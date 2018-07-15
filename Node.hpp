@@ -71,7 +71,7 @@ class NODE{
     next_mode = SLEEP;
     x = randX(mt);
     y = randY(mt);
-    activetime = randSint(mt);
+    activetime = randSint(mt);    
 
     for(i = 0; i < WAVENUM; i++){
       phase0[i] = PHASE(mt);
@@ -106,14 +106,10 @@ class NODE{
 
   void beaconProcess(double t_count, ModeMemory *modeMemo){
     if(abs(be_end - t_count) < TCOUNT){   
-      modeMemo->deleteBeacon(id);
       next_mode = Re_Be_ACK;
       prevState = BEACON;
       state = Re_Be_ACK;
       re_be_end = t_count + BEACON_TIME + CW * TIMESLOT + SIFS;
-      // if(id == 0){
-      // 	 cout << "Beacon end\t" << t_count << endl;
-      // }
     }
     tx_time+=TCOUNT;
   }
@@ -144,7 +140,7 @@ class NODE{
       next_state = SLEEP;
       prevState = TRANSMIT;
       activetime = Sint + t_count;
-      modeMemo->deleteTrans(id);
+      //cout << "End Tx\t" << t_count << "\t" << id << endl;
     }
     tx_time+=TCOUNT;
   }
@@ -176,7 +172,7 @@ class NODE{
   void CsmaCaToTransmit(double t_count, ModeMemory *modeMemo){
     next_mode = TRANSMIT;
     next_state = TRANSMIT;    
-    txEnd = t_count + (double)(PACKETSIZE / DATARATE);
+    txEnd = t_count + ((double)PACKETSIZE / DATARATE);
     transCount++;
     //modeMemo->addTrans(id);
   }
@@ -224,7 +220,7 @@ class NODE{
   
   complex<double> jakes(double t_count){
     int i;
-    //chanel_num = 0;
+    channel_num = complex<double>(0, 0);
 
     for(i = 0; i < WAVENUM; i++){      
       channel_num += exp(I * (phase0[i] + 2 * M_PI * DOPPLER * cos(arrival_angle[i]) * t_count));

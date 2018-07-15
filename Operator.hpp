@@ -73,11 +73,24 @@ class Operater{
 	    break;
 	  
 	  case TRANSMIT:
-	    modeMemo->addTrans(i);
+	    modeMemo->addTrans(i);	    
 	    break;
 
 	  case ACK:
 	    modeMemo->addAck(i);
+	    break;
+	}
+	switch(n_data[i].mode){
+	  case BEACON:
+	    modeMemo->deleteBeacon(i);
+	    break;
+	  
+	  case TRANSMIT:
+	    modeMemo->deleteTrans(i);
+	    break;
+
+	  case ACK:
+	    modeMemo->deleteACKnodes(i);
 	    break;
 	}
       }
@@ -96,12 +109,13 @@ class Operater{
   void printListSize(ModeMemory *modeMemo){
     Print::printListSize(modeMemo);
   }
-  void testFunc(){
-    
-  }
 
   void printBasicInfo(){
     Print::printBasicInfo();
+  }
+
+  void printTransNodes(double t_count, ModeMemory *modeMemo){
+    Print::printTransNodes(N, t_count, modeMemo, n_data);
   }
 
   int getNodeNum(){

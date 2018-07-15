@@ -60,25 +60,28 @@ int main(){
       while(t_count < OBSERVE){
 
 	//printProcess
-	operate->printNodeProcess(t_count);
+	//operate->printNodeProcess(t_count);	
+	
+	//各Nodesの処理分岐
+	operate->processNodes(t_count, calc, modeMemo);	
+
+	//車両受信処理
+	operate->carReceiveProcess(calc, t_count, modeMemo);
+
+	//operate->printTransNodes(t_count, modeMemo);
 	
 	//Nodeの状態を更新
 	operate->updateNodes(modeMemo);
 	
-	//各Nodesの処理分岐
-	operate->processNodes(t_count, calc, modeMemo);
-
-	//車両受信処理
-	operate->carReceiveProcess(calc, t_count, modeMemo);
-	
 	// if(abs(((double)(t_count / OBSERVE) * 100) - cnt) < 1.0){
 	//   cout << ((t_count / OBSERVE) * 100) << endl;	 
 	//   cnt+=1.0;
-	// }
+	// }	
 	
 	t_count+=TCOUNT;
       }
       //結果print
+      Print::printInspectDBPSK();
       operate->printRecAndTransPacket();
       delete operate;
       delete calc;

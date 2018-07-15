@@ -4,21 +4,46 @@
 
 class Print{
  public:
+  
   static void printBasicInfo(){
-    cout << "Obserbation time = " << OBSERVE << "\tSint = " << Sint << endl;
+    cout <<  "Obserbation time = " << OBSERVE << "\tSint = " << Sint << endl;
+    cout << "PACKETSIZE = " << PACKETSIZE << "\tBITS_COUNT = " << BITS_COUNT
+	 << "\tBits_per1u = " << BITS_PER_1us << endl;
+    cout << "x range = " << X_RANGE << "\ty range = " << Y_RANGE << endl;
+    cout << "DENSITY = " << DENSITY << "\tLambda = " << Lambda << endl;
   }
   
   static void printNodesMode(NODE *n_data, int N, double t_count){
     for(int i = 0; i < N; i++){
       if((n_data[i].mode != SLEEP) && (n_data[i].mode != Re_Be_ACK)){
-	cout << t_count << "\t" << i << "\t" << n_data[i].mode << endl;
+	cout <<  t_count << "\t" << i << "\t" << n_data[i].mode << endl;
       }
     }
   }
 
+  static void printTransNodes(int N, double t_count, ModeMemory *modeMemo, NODE *n_data){
+
+    for(int i = 0; i < N; i++){
+      if(n_data[i].next_mode != n_data[i].mode){
+	if(n_data[i].next_mode == TRANSMIT){
+	  cout << "Start Tx\t"<< t_count << "\t" << i << "\t" <<modeMemo->Trans_node.size() << endl; 
+	}	  	 	 
+      }
+    }
+    // list<int>::iterator it = modeMemo->Trans_node.begin();
+    // while(it != modeMemo->Trans_node.end()){
+    //   cout << t_count << "\t" << *it << endl;
+    //   ++it;
+    // }  
+  }
+  
   static void printInspectDBPSK(){
-    double avbSinr = 0;
+    double avb = 0;
     
+    for(int i = 0; i < avbSinr.size(); i++){
+      avb += avbSinr[i];
+    }
+    cout << avb / (double)avbSinr.size() << "\t" << ber / (double)avbSinr.size() << endl;
   }
 
   static void printNodesActiveTime(NODE *n_data, int N){

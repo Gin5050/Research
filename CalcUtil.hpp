@@ -17,6 +17,7 @@ class CalcUtile{
     int min = 10000000;
     int nodeId = EMPTY;
 
+    if(nodes.empty() == TRUE) return EMPTY;
     /*他端末からの送信信号の受信電力を測定*/
     it = nodes.begin();
     while(it != nodes.end()){
@@ -45,7 +46,7 @@ class CalcUtile{
   
   static int PPP(vector<double> &PPP_CDF, double randomValue){
     int i, j, k;
-    int split = 0;
+    int split = 1;
     double factorial = 0;
     double temp_term = 0;
 
@@ -71,8 +72,14 @@ class CalcUtile{
       else{
 	for(k = 0; k < split; k++){
 	  temp_term = temp_term * exp(-Lambda / (double)split);
+	  //cout << temp_term << endl;
 	}
 	PPP_CDF[i] = temp_term;
+      }
+
+      //cout << PPP_CDF[i] << "\t" << temp_term << endl;
+      if(isinf(PPP_CDF[i]) == TRUE){
+	cout << "inf = " << PPP_CDF[i] << endl;
       }
     
       if(PPP_CDF[i] > 1)

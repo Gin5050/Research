@@ -21,7 +21,7 @@ class MovingSink{
     recCount = 0;
     recBits = 0;
     countBits = 0;
-    connectedNode = 0;
+    connectedNode = EMPTY;
     fading = complex<double> (0,0);
     m_prev = complex<double> (0,0);  
   }
@@ -37,35 +37,38 @@ class MovingSink{
     double fadingDb = 0;
     
     if(calc->searchTx(x, y, n_data, modeMemo) == EMPTY){
-      return;
-    }
-    minNode = CalcUtile::MinNode(x, y, modeMemo->Trans_node, n_data);
-    sinr = calc->calcSinrJakes(n_data, x, y, minNode, modeMemo, t_count);
-    
-    if(recCount == 0){
-      connectedNode = minNode;
-      m_prev = CalcUtile::getConsteration(n_data, sinr, minNode, t_count);
-    }
-    
-    if(connectedNode == minNode && (recCount % BITS_PER_1us) == 0){     
-      recBits += DBPSK(sinr, n_data[minNode].channel_num, minNode);
-    }
-    
-    if(recBits == PACKETSIZE && recCount == BITS_COUNT){      
-      recPackets++;     
       initialazeRecProcess();
       return;
     }
-   
-    if(recCount == BITS_COUNT){ //あとで確認
-      cout << recBits << "\t" << recCount << "\tsinr = " << sinr << endl;
+    minNode = CalcUtile::MinNode(x, y, modeMemo->Trans_node, n_data);    
+    
+    if(recCount == 0 && connectedNode == EMPTY){
+      sinr = calc->calcSinrJakes(n_data, x, y, minNode, modeMemo, t_count);
+      connectedNode = minNode;
+      m_prev = CalcUtile::getConsteration(n_data, sinr, minNode, t_count);   
+    }
+    if(connectedNode == minNode){      
+      if(recCount % BITS_PER_1us == 0){
+	sinr = calc->calcSinrJakes(n_data, x, y, minNode, modeMemo, t_count);
+	recBits += DBPSK(sinr, n_data[minNode].jakes(t_count));	
+      }
+      
+      if(recBits == PACKETSIZE){	
+	recPackets++;	
+	initialazeRecProcess();
+	//return;
+      }            
+    }
+    if(recCount == BITS_COUNT - 4){ //あとで
+      avbSinr.push_back(sinr);
+      ber += (1 - (recBits / (double)PACKETSIZE));	
       initialazeRecProcess();
       return;
     }
     recCount++;
   }
 
-  int DBPSK(double sinr, complex<double> channelNum, int txId){
+  int DBPSK(double sinr, complex<double> channelNum){
     int i;
     double p_d = 0; 
     complex<double> m_temp;

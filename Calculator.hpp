@@ -54,7 +54,9 @@ class Calculator{
   }
 
   int searchTx(double x, double y, NODE *n_data, ModeMemory *modeMemo){
-    int nodeId = CalcUtile::MinNode(x, y, modeMemo->Trans_node, n_data);
+    int nodeId = EMPTY;
+    nodeId += modeMemo->Trans_node.size();
+      //CalcUtile::MinNode(x, y, modeMemo->Trans_node, n_data);
 
     if(nodeId == EMPTY){
       return EMPTY;
@@ -109,7 +111,7 @@ class Calculator{
     }
     distance = CalcUtile::NodesDistance(x, y, n_data[minNode].x, n_data[minNode].y);
     loss = Channel::pathLoss(distance, PATHLOSS_num);
-    chnlCoeff = n_data[minNode].jakes(t_count);
+    //chnlCoeff = n_data[minNode].jakes(t_count);
     //fading = 10 * log10(abs(chnlCoeff) * abs(chnlCoeff));
 
     // cout << distance << "\t" << x << "\t" << y << "\t" <<  n_data[minNode].x << "\t" <<  n_data[minNode].y << "\t"
