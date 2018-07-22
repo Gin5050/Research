@@ -15,7 +15,7 @@
 #define PoisonSIZE 2000
 #define X_RANGE 1200 //range of x axis (m)
 #define Y_RANGE 10 //range of y acis (m)
-#define DENSITY 0.05 //1m^2あたりの平均の端末数（密度）
+#define DENSITY 0.1 //1m^2あたりの平均の端末数（密度）
 #define Lambda (X_RANGE * Y_RANGE * DENSITY)
 #define SN 100					//Receiverスタート地点ノード番号
 #define EN (X_RANGE - SN) 			//Receiver受信終了地点

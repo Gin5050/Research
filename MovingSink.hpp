@@ -49,7 +49,7 @@ class MovingSink{
       connectedNode = minNode;
       m_prev = CalcUtile::getConsteration(n_data, sinr, minNode, t_count);   
     }
-    if(connectedNode == minNode){      
+    if(connectedNode == minNode){     
       if(recCount % BITS_PER_1us == 0){
 	sinr = CalcUtile::calcSinrJakes(n_data, x, y, minNode, modeMemo, t_count);
 	recBits += DBPSK(sinr, n_data[minNode].jakes(t_count));	

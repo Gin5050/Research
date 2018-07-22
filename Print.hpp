@@ -6,11 +6,13 @@ class Print{
  public:
   
   static void printBasicInfo(){
+    cout << "---------------------------------------------------------" << endl;
     cout <<  "Obserbation time = " << OBSERVE << "\tSint = " << Sint << endl;
     cout << "PACKETSIZE = " << PACKETSIZE << "\tBITS_COUNT = " << BITS_COUNT
 	 << "\tBits_per1u = " << BITS_PER_1us << endl;
     cout << "x range = " << X_RANGE << "\ty range = " << Y_RANGE << endl;
     cout << "DENSITY = " << DENSITY << "\tLambda = " << Lambda << endl;
+    cout << "---------------------------------------------------------" << endl;
   }
   
   static void printNodesMode(NODE *n_data, int N, double t_count){
@@ -43,7 +45,7 @@ class Print{
     for(int i = 0; i < avbSinr.size(); i++){
       avb += avbSinr[i];
     }
-    cout << avb / (double)avbSinr.size() << "\t" << ber / (double)avbSinr.size() << endl;
+    cout << "adv Sinr = " << avb / (double)avbSinr.size() << "\tBER = " << ber / (double)avbSinr.size() << endl;
   }
 
   static void printNodesActiveTime(NODE *n_data, int N){
@@ -54,7 +56,7 @@ class Print{
 
   static  void printRecAndTransPacket(NODE *n_data, MovingSink *car, int N){
     int cnt = 0;
-    cout << N << endl;
+    cout << "# of Node = " << N << endl;
     cout << "RecPacket\t" << car->recPackets << "\t";
     for(int i = 0; i < N; i++ ){
       cnt += n_data[i].transCount;
