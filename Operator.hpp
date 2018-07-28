@@ -137,6 +137,11 @@ public:
     Print::printTransNodes(N, t_count, modeMemo, n_data);
   }
 
+  void printNodeDetail(double sleep)
+  {
+    Print::printNodeDetail(sleep, n_data, N);
+  }
+
   int getNodeNum()
   {
     return N;

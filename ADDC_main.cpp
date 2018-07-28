@@ -74,6 +74,7 @@ int main(){
           t_count += TCOUNT;
         }
         //結果print
+        operate->printNodeDetail(p_sleep);
         Print::printInspectDBPSK();
         operate->printRecAndTransPacket();
         delete operate;

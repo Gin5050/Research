@@ -8,12 +8,35 @@ public:
   static void printBasicInfo()
   {
     cout << "---------------------------------------------------------" << endl;
-    cout << "Obserbation time = " << OBSERVE << "\tSint = " << Sint << endl;
+    cout << "RepeatNum = " << REPEATNUM << "\tObserbation time = " << OBSERVE << "\tSint = " << Sint << endl;
     cout << "PACKETSIZE = " << PACKETSIZE << "\tBITS_COUNT = " << BITS_COUNT
          << "\tBits_per1u = " << BITS_PER_1us << endl;
     cout << "x range = " << X_RANGE << "\ty range = " << Y_RANGE << endl;
     cout << "DENSITY = " << DENSITY << "\tLambda = " << Lambda << endl;
-    cout << "---------------------------------------------------------" << endl;
+    cout << "---------------------------------------------------------\n" << endl;
+
+    cout << "#Sleep\t\t"
+         << "#avrSleepTime\t\t"
+         << "#avrTxTime\t\t"
+         << "#avrCsmaTime\t\t" << endl;
+  }
+
+  static void printNodeDetail(double sleep, NODE *n_data, int N)
+  {
+    double sleepTime = 0;
+    double csmaTime = 0;
+    double txTime = 0;
+
+    cout << sleep << "\t\t";
+    for (int i = 0; i < N; i++){
+      sleepTime += n_data[i].sleep_time;
+      csmaTime += n_data[i].csma_time;
+      txTime += n_data[i].tx_time;
+    }
+    sleepTime = sleepTime / (double)N;
+    csmaTime = csmaTime / (double)N;
+    txTime = txTime / (double)N;
+    cout << sleepTime << "\t\t" << txTime << "\t\t" << csmaTime << endl;
   }
 
   static void printNodesMode(NODE *n_data, int N, double t_count)
