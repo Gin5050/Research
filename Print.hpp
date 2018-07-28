@@ -22,11 +22,13 @@ public:
          << "#avrCsmaTime\t\t" << endl;
     cout << "\t\t"
          << "#RecPackets\t\t"
-         << "#TransPackets" << endl;
+         << "#TransPackets\t\t"
+         << "# #ofNodes" << endl;
     cout << "\t\t"
          << "#advSinr\t\t"
          << "#BER\t\t\t"
-         << "# #ofNodes" << endl << endl;
+         << endl
+         << endl;
   }
 
   static void printNodeDetail(double sleep, NODE *n_data, int N)
@@ -105,7 +107,7 @@ public:
   static void printRecAndTransPacket(NODE *n_data, MovingSink *car, int N)
   {
     int cnt = 0;
-    
+
     cout << "\t\t" << setfill(' ') << setw(8) << left << car->recPackets << "\t\t";
     for (int i = 0; i < N; i++)
     {

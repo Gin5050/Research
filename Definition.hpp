@@ -1,7 +1,7 @@
 /*2018　4/15作成　*/
 /*SensorパラメータRev 1.0 10/14Copyright © 2014 by Silicon LaboratoriesSi4468/7Si4468/7HIGH-PERFORMANCE, LOW-CURRENT TRANSCEIVER*/
 
-#define OBSERVE 5  //second
+#define OBSERVE 10  //second
 #define REPEATNUM 1 //繰り返し回数
 #define TCOUNT 0.000001
 #define PACKETSIZE 500 //パケットの構成ビット
