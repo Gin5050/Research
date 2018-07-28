@@ -37,7 +37,7 @@ int main(){
 
     Print::printBasicInfo();
 
-    for(p_sleep = 0.1; p_sleep < 0.9; p_sleep += 0.1){    
+    for(p_sleep = 0.5; p_sleep < 0.9; p_sleep += 0.1){    
       for(nowround = 0; nowround < REPEATNUM; nowround++){
         
         //操作用オブジェクト生成
@@ -75,8 +75,9 @@ int main(){
         }
         //結果print
         operate->printNodeDetail(p_sleep);
-        Print::printInspectDBPSK();
         operate->printRecAndTransPacket();
+        Print::printInspectDBPSK();
+        
         delete operate;
         delete modeMemo;
       }

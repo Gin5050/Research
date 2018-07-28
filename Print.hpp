@@ -13,12 +13,20 @@ public:
          << "\tBits_per1u = " << BITS_PER_1us << endl;
     cout << "x range = " << X_RANGE << "\ty range = " << Y_RANGE << endl;
     cout << "DENSITY = " << DENSITY << "\tLambda = " << Lambda << endl;
-    cout << "---------------------------------------------------------\n" << endl;
+    cout << "---------------------------------------------------------\n"
+         << endl;
 
     cout << "#Sleep\t\t"
          << "#avrSleepTime\t\t"
          << "#avrTxTime\t\t"
          << "#avrCsmaTime\t\t" << endl;
+    cout << "\t\t"
+         << "#RecPackets\t\t"
+         << "#TransPackets" << endl;
+    cout << "\t\t"
+         << "#advSinr\t\t"
+         << "#BER\t\t\t"
+         << "# #ofNodes" << endl << endl;
   }
 
   static void printNodeDetail(double sleep, NODE *n_data, int N)
@@ -28,7 +36,8 @@ public:
     double txTime = 0;
 
     cout << sleep << "\t\t";
-    for (int i = 0; i < N; i++){
+    for (int i = 0; i < N; i++)
+    {
       sleepTime += n_data[i].sleep_time;
       csmaTime += n_data[i].csma_time;
       txTime += n_data[i].tx_time;
@@ -36,7 +45,9 @@ public:
     sleepTime = sleepTime / (double)N;
     csmaTime = csmaTime / (double)N;
     txTime = txTime / (double)N;
-    cout << sleepTime << "\t\t" << txTime << "\t\t" << csmaTime << endl;
+
+    cout << fixed << setprecision(8) << sleepTime << "\t\t" << txTime << "\t\t" << csmaTime << endl;
+    cout << defaultfloat;
   }
 
   static void printNodesMode(NODE *n_data, int N, double t_count)
@@ -78,7 +89,9 @@ public:
     {
       avb += avbSinr[i];
     }
-    cout << "adv Sinr = " << avb / (double)avbSinr.size() << "\tBER = " << ber / (double)avbSinr.size() << endl;
+    cout << fixed << setprecision(8);
+    cout << "\t\t" << avb / (double)avbSinr.size() << "\t\t" << ber / (double)avbSinr.size() << endl;
+    cout << defaultfloat;
   }
 
   static void printNodesActiveTime(NODE *n_data, int N)
@@ -92,13 +105,14 @@ public:
   static void printRecAndTransPacket(NODE *n_data, MovingSink *car, int N)
   {
     int cnt = 0;
-    cout << "# of Node = " << N << endl;
-    cout << "RecPacket\t" << car->recPackets << "\t";
+    
+    cout << "\t\t" << setfill(' ') << setw(8) << left << car->recPackets << "\t\t";
     for (int i = 0; i < N; i++)
     {
       cnt += n_data[i].transCount;
     }
-    cout << "TransPacket\t" << cnt << endl;
+    cout << setfill(' ') << setw(8) << left << cnt << "\t\t" << N << endl;
+    cout << defaultfloat;
   }
 
   static void printNodeProcess(NODE *n_data, int N, double t_count)
