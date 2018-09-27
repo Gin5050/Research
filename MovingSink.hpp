@@ -112,4 +112,8 @@ public:
   ~MovingSink() {}
 };
 
+vector<int> getNodeNum(){
+  return nodeNum;
+}
+
 #endif

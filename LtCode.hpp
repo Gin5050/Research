@@ -21,6 +21,35 @@ class LtCode
         edge.resize(edge_size);
         degree = edge_size;
     }
+
+    int defineDegree()
+    {
+        if (temp < 0.18)
+        {
+            degree = 1;
+        }
+        else if (temp < 0.52)
+        {
+            degree = 2;
+        }
+        else if (temp < 0.79)
+        {
+            degree = 4;
+        }
+        else if (temp < 0.91)
+        {
+            degree = 8;
+        }
+        else if (temp < 0.92)
+        {
+            degree = 16;
+        }
+        else
+        {
+            degree = 32;
+        }
+    }
+
     ~LtCode() {} //デストラクタ
 };
 

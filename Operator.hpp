@@ -22,6 +22,7 @@ public:
     p_sleep = sleep;
   }
 
+  //Node初期化
   void initialaizeNodes()
   {
     for (int i = 0; i < N; i++)
@@ -33,6 +34,13 @@ public:
     CalcUtile::Memory_fill(n_data, N);
   }
 
+  //車両初期化
+  void initialazeCar()
+  {
+    car->initialization();
+  }
+
+  //Nodeの時間ごとの処理の遷移
   void processNodes(double t_count, ModeMemory *modeMemo)
   {
 
@@ -65,17 +73,19 @@ public:
     }
   }
 
-  void initialazeCar()
-  {
-    car->initialization();
-  }
-
+  //車両の時間ごとの処理
   void carReceiveProcess(double t_count, ModeMemory *modeMemo)
   {
     car->x += (TCOUNT * V_m);
     car->receiveProcess(n_data, t_count, modeMemo);
   }
 
+  //LT符号
+  void ltEncode() {
+    int sPackets
+  }
+
+  //時間ごとのノードの状態を更新
   void updateNodes(ModeMemory *modeMemo)
   {
     for (int i = 0; i < N; i++)
