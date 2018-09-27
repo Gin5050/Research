@@ -82,7 +82,17 @@ public:
 
   //LT符号
   void ltEncode() {
-    int sPackets
+    int i;
+    vector<int> sPackets = car->getNodeNum();
+    list<LtCode> codeList;
+    list<LtCode>::iterator it;  
+    LtCode ltcode;
+
+    for (i = 0; i < sPackets.size(); i++)
+    {
+
+
+    }
   }
 
   //時間ごとのノードの状態を更新

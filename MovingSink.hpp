@@ -73,7 +73,7 @@ public:
       }
     }
     if (recCount == BITS_COUNT - 4)
-    { 
+    {
       avbSinr.push_back(sinr);
       ber += (1 - (recBits / (double)PACKETSIZE));
       initialazeRecProcess();
@@ -109,11 +109,12 @@ public:
     m_prev = complex<double>(0, 0);
   }
 
+  vector<int> getNodeNum()
+  {
+    return nodeNum;
+  }
+
   ~MovingSink() {}
 };
-
-vector<int> getNodeNum(){
-  return nodeNum;
-}
 
 #endif
