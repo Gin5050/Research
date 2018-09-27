@@ -12,6 +12,7 @@ public:
   int connectedNode;
   double x;
   double y;
+  vector<int> nodeNum; //受信成功時の送信端末格納用
   complex<double> fading;
   complex<double> m_prev;
 
@@ -66,12 +67,13 @@ public:
       if (recBits == PACKETSIZE)
       {
         recPackets++;
+        nodeNum.push_back(connectedNode);
         initialazeRecProcess();
         //return;
       }
     }
     if (recCount == BITS_COUNT - 4)
-    { //あとで
+    { 
       avbSinr.push_back(sinr);
       ber += (1 - (recBits / (double)PACKETSIZE));
       initialazeRecProcess();
