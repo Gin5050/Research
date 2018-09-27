@@ -1,8 +1,8 @@
 /*Utilクラス*/
-#ifndef CALCUTIL_HEAD
-#define CALCUTIL_HEAD
+#ifndef LTCODE_HEAD
+#define LTCODE_HEAD
 
-class CalcUtile
+class LtCode
 {
   public:
     int degree;
@@ -10,18 +10,18 @@ class CalcUtile
     list<double> timestamp;
     list<int> edge;
 
-    LT_CODES()
+    LtCode()
     { //引数なしコンストラクタ
         degree = 0;
         flag = 0;
         //timestamp = 0;
     }
-    LT_CODES(int edge_size)
+    LtCode(int edge_size)
     { //degree代入・edgeサイズ決定用コンストラクタ
         edge.resize(edge_size);
         degree = edge_size;
     }
-    ~LT_CODES() {} //デストラクタ
+    ~LtCode() {} //デストラクタ
 };
 
 #endif

@@ -66,6 +66,8 @@ int main(){
           //Nodeの状態を更新
           operate->updateNodes(modeMemo);
 
+          //LT 復号
+
           // if(abs(((double)(t_count / OBSERVE) * 100) - cnt) < 1.0){
           //   cout << ((t_count / OBSERVE) * 100) << endl;
           //   cnt+=1.0;

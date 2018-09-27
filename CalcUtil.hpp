@@ -232,6 +232,231 @@ public:
     return EMPTY;
   }
 
+  static void Memory_fill(NODE *n_data, int N)
+  {
+    int i, j, k, l;
+    int min_num = -1;
+    int locate = 0;
+    double min = 10000;
+    double min_temp = -1;
+    double dis1 = 0;
+    double dis2 = 0;
+    double dis3 = 0;
+    double dis4 = 0;
+    double dis = 0;
+
+    vector<double> v_dis;
+
+    //n_data[0].x = 599.9; n_data[0].y = 599.9;
+    for (i = 0; i < N; i++)
+    {
+      //cout << n_data[i].x << "\t" << n_data[i].y << endl;
+      for (j = 0; j < MEMORY; j++)
+      {
+        min = 1000000;
+        min_num = -1;
+        for (k = 0; k < N; k++)
+        {
+          if (i != k)
+          {
+            if (n_data[i].x > 0 && n_data[i].y > 0)
+            { //1
+              if (n_data[k].x > 0 && n_data[k].y > 0)
+              {//1-1
+                dis1 = sqrt(pow(n_data[i].x - n_data[k].x, 2) + pow(n_data[i].y - n_data[k].y, 2));
+                dis = dis1;
+              }
+              else if (n_data[k].x > 0 && n_data[k].y < 0)
+              {//1-2
+                dis1 = sqrt(pow(n_data[i].x - n_data[k].x, 2) + pow(n_data[i].y - n_data[k].y, 2));
+                dis2 = sqrt(pow(n_data[i].x - n_data[k].x, 2) + pow(n_data[i].y - (n_data[k].y + Y_RANGE), 2));
+                if (dis1 < dis2)
+                  dis = dis1;
+                else
+                  dis = dis2;
+              }
+              else if (n_data[k].x < 0 && n_data[k].y > 0)
+              {//1-3
+                dis1 = sqrt(pow(n_data[i].x - n_data[k].x, 2) + pow(n_data[i].y - n_data[k].y, 2));
+                dis2 = sqrt(pow(n_data[i].x - (n_data[k].x + X_RANGE), 2) + pow(n_data[i].y - (n_data[k].y), 2));
+                if (dis1 < dis2)
+                  dis = dis1;
+                else
+                  dis = dis2;
+              }
+              else if (n_data[k].x < 0 && n_data[k].y < 0)
+              {//1-4
+                //cout << "k = " << n_data[k].x << "\t" << n_data[k].y << endl;
+                dis1 = sqrt(pow(n_data[i].x - n_data[k].x, 2) + pow(n_data[i].y - n_data[k].y, 2));
+                dis2 = sqrt(pow(n_data[i].x - (n_data[k].x + X_RANGE), 2) + pow(n_data[i].y - (n_data[k].y), 2));
+                dis3 = sqrt(pow(n_data[i].x - (n_data[k].x), 2) + pow(n_data[i].y - (n_data[k].y + Y_RANGE), 2));
+                dis4 = sqrt(pow(n_data[i].x - (n_data[k].x + X_RANGE), 2) + pow(n_data[i].y - (n_data[k].y + Y_RANGE), 2));
+                if (dis1 < dis2)
+                  dis = dis1;
+                else
+                  dis = dis2;
+                if (dis3 < dis)
+                  dis = dis3;
+                if (dis4 < dis)
+                  dis = dis4;
+                //cout << dis1 << "\t" << dis2 << "\t" << dis3 << "\t" << dis4 << "\t" << dis << endl;
+              }
+            }
+            else if (n_data[i].x < 0 && n_data[i].y > 0)
+            { //2
+              if (n_data[k].x < 0 && n_data[k].y > 0)
+              {//2-1
+                dis1 = sqrt(pow(n_data[i].x - n_data[k].x, 2) + pow(n_data[i].y - n_data[k].y, 2));
+                dis = dis1;
+              }
+              else if (n_data[k].x < 0 && n_data[k].y < 0)
+              {//2-2
+                dis1 = sqrt(pow(n_data[i].x - n_data[k].x, 2) + pow(n_data[i].y - n_data[k].y, 2));
+                dis2 = sqrt(pow(n_data[i].x - n_data[k].x, 2) + pow(n_data[i].y - (n_data[k].y + Y_RANGE), 2));
+                if (dis1 < dis2)
+                  dis = dis1;
+                else
+                  dis = dis2;
+              }
+              else if (n_data[k].x > 0 && n_data[k].y > 0)
+              {//2-3
+                dis1 = sqrt(pow(n_data[i].x - n_data[k].x, 2) + pow(n_data[i].y - n_data[k].y, 2));
+                dis2 = sqrt(pow(n_data[i].x - (n_data[k].x + X_RANGE), 2) + pow(n_data[i].y - (n_data[k].y), 2));
+                if (dis1 < dis2)
+                  dis = dis1;
+                else
+                  dis = dis2;
+              }
+              else if (n_data[k].x > 0 && n_data[k].y < 0)
+              {//2-4
+                dis1 = sqrt(pow(n_data[i].x - n_data[k].x, 2) + pow(n_data[i].y - n_data[k].y, 2));
+                dis2 = sqrt(pow(n_data[i].x - (n_data[k].x + X_RANGE), 2) + pow(n_data[i].y - (n_data[k].y), 2));
+                dis3 = sqrt(pow(n_data[i].x - (n_data[k].x), 2) + pow(n_data[i].y - (n_data[k].y + Y_RANGE), 2));
+                dis4 = sqrt(pow(n_data[i].x - (n_data[k].x + X_RANGE), 2) + pow(n_data[i].y - (n_data[k].y + Y_RANGE), 2));
+                if (dis1 < dis2)
+                  dis = dis1;
+                else
+                  dis = dis2;
+                if (dis3 < dis)
+                  dis = dis3;
+                if (dis4 < dis)
+                  dis = dis4;
+              }
+            }
+            else if (n_data[i].x > 0 && n_data[i].y < 0)
+            { //3
+              if (n_data[k].x > 0 && n_data[k].y < 0)
+              {//3-1
+                dis1 = sqrt(pow(n_data[i].x - n_data[k].x, 2) + pow(n_data[i].y - n_data[k].y, 2));
+                dis = dis1;
+              }
+              else if (n_data[k].x > 0 && n_data[k].y > 0)
+              {//3-2
+                dis1 = sqrt(pow(n_data[i].x - n_data[k].x, 2) + pow(n_data[i].y - n_data[k].y, 2));
+                dis2 = sqrt(pow(n_data[i].x - n_data[k].x, 2) + pow(n_data[i].y - (n_data[k].y + Y_RANGE), 2));
+                if (dis1 < dis2)
+                  dis = dis1;
+                else
+                  dis = dis2;
+              }
+              else if (n_data[k].x < 0 && n_data[k].y < 0)
+              {//3-3
+                dis1 = sqrt(pow(n_data[i].x - n_data[k].x, 2) + pow(n_data[i].y - n_data[k].y, 2));
+                dis2 = sqrt(pow(n_data[i].x - (n_data[k].x + X_RANGE), 2) + pow(n_data[i].y - (n_data[k].y), 2));
+                if (dis1 < dis2)
+                  dis = dis1;
+                else
+                  dis = dis2;
+              }
+              else if (n_data[k].x < 0 && n_data[k].y > 0)
+              {//3-4
+                dis1 = sqrt(pow(n_data[i].x - n_data[k].x, 2) + pow(n_data[i].y - n_data[k].y, 2));
+                dis2 = sqrt(pow(n_data[i].x - (n_data[k].x + X_RANGE), 2) + pow(n_data[i].y - (n_data[k].y), 2));
+                dis3 = sqrt(pow(n_data[i].x - (n_data[k].x), 2) + pow(n_data[i].y - (n_data[k].y + Y_RANGE), 2));
+                dis4 = sqrt(pow(n_data[i].x - (n_data[k].x + X_RANGE), 2) + pow(n_data[i].y - (n_data[k].y + Y_RANGE), 2));
+                if (dis1 < dis2)
+                  dis = dis1;
+                else
+                  dis = dis2;
+                if (dis3 < dis)
+                  dis = dis3;
+                if (dis4 < dis)
+                  dis = dis4;
+              }
+            }
+            else if (n_data[i].x < 0 && n_data[i].y < 0)
+            { //4
+              if (n_data[k].x < 0 && n_data[k].y < 0)
+              {//4-1
+                dis1 = sqrt(pow(n_data[i].x - n_data[k].x, 2) + pow(n_data[i].y - n_data[k].y, 2));
+                dis = dis1;
+              }
+              else if (n_data[k].x < 0 && n_data[k].y > 0)
+              {//4-2
+                dis1 = sqrt(pow(n_data[i].x - n_data[k].x, 2) + pow(n_data[i].y - n_data[k].y, 2));
+                dis2 = sqrt(pow(n_data[i].x - n_data[k].x, 2) + pow(n_data[i].y - (n_data[k].y + Y_RANGE), 2));
+                if (dis1 < dis2)
+                  dis = dis1;
+                else
+                  dis = dis2;
+              }
+              else if (n_data[k].x > 0 && n_data[k].y < 0)
+              {//4-3
+                dis1 = sqrt(pow(n_data[i].x - n_data[k].x, 2) + pow(n_data[i].y - n_data[k].y, 2));
+                dis2 = sqrt(pow(n_data[i].x - (n_data[k].x + X_RANGE), 2) + pow(n_data[i].y - (n_data[k].y), 2));
+                if (dis1 < dis2)
+                  dis = dis1;
+                else
+                  dis = dis2;
+              }
+              else if (n_data[k].x > 0 && n_data[k].y > 0)
+              {//4-4
+                dis1 = sqrt(pow(n_data[i].x - n_data[k].x, 2) + pow(n_data[i].y - n_data[k].y, 2));
+                dis2 = sqrt(pow(n_data[i].x - (n_data[k].x + X_RANGE), 2) + pow(n_data[i].y - (n_data[k].y), 2));
+                dis3 = sqrt(pow(n_data[i].x - (n_data[k].x), 2) + pow(n_data[i].y - (n_data[k].y + Y_RANGE), 2));
+                dis4 = sqrt(pow(n_data[i].x - (n_data[k].x + X_RANGE), 2) + pow(n_data[i].y - (n_data[k].y + Y_RANGE), 2));
+                if (dis1 < dis2)
+                  dis = dis1;
+                else
+                  dis = dis2;
+                if (dis3 < dis)
+                  dis = dis3;
+                if (dis4 < dis)
+                  dis = dis4;
+              }
+            }
+
+            if (j == 0)
+            {
+              if (dis < min)
+              {
+                min = dis;
+                min_num = k;
+              }
+            }
+            else
+            {
+              if (dis < min && dis > min_temp)
+              {
+                min = dis;
+                min_num = k;
+              }
+            }
+          }
+        }
+        min_temp = min;
+        n_data[i].memory[j] = min_num;
+      }
+    }
+    for (i = 0; i < N; i++)
+    {
+      n_data[i].x += X_RANGE / 2.0;
+      n_data[i].y += Y_RANGE / 2.0;
+      // if (n_data[i].x > SN && n_data[i].x < EN)
+      //   r2_data.push_back(i);
+    }
+  }
+
   ~CalcUtile() {}
 };
 

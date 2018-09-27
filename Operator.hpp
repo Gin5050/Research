@@ -28,6 +28,9 @@ public:
     {
       n_data[i].Initialaze(i);
     }
+
+    //Nodeのメモリに一定範囲内のノード情報追加
+    CalcUtile::Memory_fill(n_data, N);
   }
 
   void processNodes(double t_count, ModeMemory *modeMemo)
