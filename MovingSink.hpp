@@ -12,7 +12,7 @@ public:
   int connectedNode;
   double x;
   double y;
-  vector<int> nodeNum; //受信成功時の送信端末格納用
+  list<LtCode> buffer;
   complex<double> fading;
   complex<double> m_prev;
 
@@ -67,7 +67,7 @@ public:
       if (recBits == PACKETSIZE)
       {
         recPackets++;
-        nodeNum.push_back(connectedNode);
+        buffer.push_back(n_data[connectedNode].ltEncode());
         initialazeRecProcess();
         //return;
       }

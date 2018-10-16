@@ -12,18 +12,21 @@ class LtCode
 
     LtCode()
     { //引数なしコンストラクタ
-        degree = 0;
+        defineDegree();
         flag = 0;
         //timestamp = 0;
     }
+    
     LtCode(int edge_size)
     { //degree代入・edgeサイズ決定用コンストラクタ
         edge.resize(edge_size);
         degree = edge_size;
     }
 
-    int defineDegree()
+    void defineDegree()
     {
+        double temp = randuni(mt);
+        
         if (temp < 0.18)
         {
             degree = 1;
@@ -47,6 +50,15 @@ class LtCode
         else
         {
             degree = 32;
+        }        
+    }
+
+    void defineEdge(int *shf, int size){
+    
+        Utile::shuffle(shf, size);
+        for (int i = 0; i < degree; i++)
+        {
+            edge.push_back(shf[i]);      
         }
     }
 

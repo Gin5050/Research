@@ -6,24 +6,8 @@ class CalcUtile
 {
 public:
   CalcUtile() {}
-
-  static void shuffle(int *sh, int size){
-    int i, j;
-    int temp;
-    int temp1;
-    int temp2;
-    uniform_int_distribution<> randuni(0, size - 1);
-
-    for(i = 0; i < size; i++) sh[i] = i;
-    for(i = 0; i < size; i++){
-      temp = randuni(mt);
-      temp1 = sh[i];
-      sh[i] = sh[temp];
-      sh[temp] = temp1;
-    }
-  } 
   
-  static double NodesDstance(int x1, int y1, int x2, int y2)
+  static double NodesDistance(int x1, int y1, int x2, int y2)
   {
     return (sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2)));
   }
@@ -196,6 +180,7 @@ public:
     double factorial = 0;
     double temp_term = 0;
 
+    PPP_CDF.resize(TEMP_NUM);
     /*--------------------Poison分布生成---------------------------------*/
     if (exp(-Lambda) < DBL_MIN)
     { //Underflowの場合

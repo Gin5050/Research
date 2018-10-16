@@ -80,21 +80,6 @@ public:
     car->receiveProcess(n_data, t_count, modeMemo);
   }
 
-  //LT符号
-  void ltEncode() {
-    int i;
-    vector<int> sPackets = car->getNodeNum();
-    list<LtCode> codeList;
-    list<LtCode>::iterator it;  
-    LtCode ltcode;
-
-    for (i = 0; i < sPackets.size(); i++)
-    {
-
-
-    }
-  }
-
   //時間ごとのノードの状態を更新
   void updateNodes(ModeMemory *modeMemo)
   {

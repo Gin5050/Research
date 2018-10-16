@@ -20,7 +20,7 @@
 #define SN 100            //Receiverスタート地点ノード番号
 #define EN (X_RANGE - SN) //Receiver受信終了地点
 #define WAVENUM 15
-#define Sint (10.0) //スリープ間隔（s）
+#define Sint (5.0) //スリープ間隔（s）
 #define PATHLOSS_num 2.5
 #define V_km 36                              //車速36km
 #define V_m ((double)(V_km * 1000 / 3600.0)) //車両速度 m/s
