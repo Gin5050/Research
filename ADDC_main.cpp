@@ -57,7 +57,7 @@ int main(){
         t_count = 0;
 
         //観測開始
-        while (t_count < OBSERVE)
+        while (t_count < OBSERVE) 
         {          
           //各Nodesの処理分岐
           operate->processNodes(t_count, modeMemo);
@@ -69,7 +69,8 @@ int main(){
           operate->updateNodes(modeMemo);
 
           //LT 復号
-        /*   if(abs(((double)(t_count / OBSERVE) * 100) - cnt) < 1.0){
+          operate->carDecode();
+          /*   if(abs(((double)(t_count / OBSERVE) * 100) - cnt) < 1.0){
              cout << ((t_count / OBSERVE) * 100) << endl;
              cnt+=1.0;
           } */

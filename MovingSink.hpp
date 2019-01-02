@@ -13,6 +13,7 @@ public:
   double x;
   double y;
   list<LtCode> buffer;
+  int decodedPackets;
   complex<double> fading;
   complex<double> m_prev;
 
@@ -25,13 +26,14 @@ public:
     recBits = 0;
     countBits = 0;
     connectedNode = EMPTY;
+    decodedPackets = 0;
     fading = complex<double>(0, 0);
     m_prev = complex<double>(0, 0);
   }
 
   void initialization()
   {
-    x = 0;
+    x = 250;
     y = Y_RANGE / 2.0;
   }
 
@@ -109,10 +111,29 @@ public:
     m_prev = complex<double>(0, 0);
   }
 
-  vector<int> getNodeNum()
+  void ltDecode()
   {
-    return nodeNum;
+    int i;
+    list<LtCode> ::iterator it = buffer.begin();
+    list<int> ::iterator edgeIt;
+
+    while(it != buffer.end()){
+      if(it->degree == 1){
+        cout << "check" << endl;
+      }
+      edgeIt = it->edge.begin();
+    }
+
   }
+
+  int getRecPackets()
+  {
+    return recPackets;
+  }
+  // vector<int> getNodeNum()
+  // {
+  //   return nodeNum;
+  // }
 
   ~MovingSink() {}
 };

@@ -187,7 +187,7 @@ public:
       split = 2;
       while (0)
       {
-        if (exp(Lambda / split) > DBL_MIN)
+        if (exp(Lambda / (double)split) > DBL_MIN)
           break;
         else
           split++;
@@ -218,7 +218,11 @@ public:
       //cout << PPP_CDF[i] << "\t" << temp_term << endl;
       if (isinf(PPP_CDF[i]) == TRUE)
       {
+        cout << "i = " << i << endl;
+        cout << "sprit = " << split << endl;
+        cout << "temp_term = " << temp_term << endl;
         cout << "inf = " << PPP_CDF[i] << endl;
+        cout << "inf term = " << exp(-Lambda / (double)i) << endl;
       }
 
       if (PPP_CDF[i] > 1)

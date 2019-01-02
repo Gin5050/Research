@@ -207,13 +207,19 @@ public:
   }
   /*----------------------------------------------------------*/
 
-   //LT符号
+  //LT符号
   LtCode ltEncode() 
   {
     LtCode code;
     code.defineEdge(memory, MEMORY);   
 
     return code;
+  }
+
+  //LT復号
+  void ltDecode()
+  {
+    
   }
 
   void DBPSK(double sinr, int txId)

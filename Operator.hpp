@@ -20,6 +20,7 @@ public:
     minNode = EMPTY;
     sinr = 0;
     p_sleep = sleep;
+    //cout << "Node num = " << N << endl;
   }
 
   //Node初期化
@@ -78,6 +79,15 @@ public:
   {
     car->x += (TCOUNT * V_m);
     car->receiveProcess(n_data, t_count, modeMemo);
+  }
+
+  //車両で復号
+  void carDecode()
+  {
+    if(car->getRecPackets() > N){
+      car->ltDecode();
+    }
+    return;
   }
 
   //時間ごとのノードの状態を更新
